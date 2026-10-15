@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta property="og:title" content="Dr. Minerva Molon | Psychiatry &amp; Mental Health">
+<meta property="og:description" content="Face-to-face and online psychiatric consultations. Book online.">
+<meta property="og:image" content="/images/dr-minerva-molon.webp">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Dr. Minerva Molon | Psychiatry &amp; Mental Health</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Dr. Minerva Molon, psychiatrist. Face-to-face and online consultations for adults and families.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Caveat:wght@500;700&display=swap">
+<style>
+/* Layout: template rhythm, dark forest bands alternating with cream bands joined by soft waves; gold for action. */
+:root{
+  --forest:#123d2f; --forest-2:#0d2f24; --forest-ink:#e9f1ea;
+  --gold:#f2b33d; --gold-ink:#2a1d04;
+  --cream:#fbf5ea; --paper:#ffffff; --ink:#1d2a24; --muted:#5f6d66; --line:#e6dccb;
+  --t-peach:#fde3cf; --t-mint:#d9eedd; --t-sand:#f8e6c4; --t-rose:#f6dbe0; --t-lav:#e7ddf3; --t-sky:#d8e8f2;
+  --ok:#2e7d4f; --err:#b3261e;
+  --display:"Fraunces", Georgia, "Times New Roman", serif;
+  --body:"DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --script:"Caveat", "Segoe Print", cursive;
+  --wrap:1180px; --r:18px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --forest:#0f3428; --forest-2:#0a271e; --forest-ink:#e9f1ea;
+  --cream:#101b17; --paper:#17251f; --ink:#e8efe9; --muted:#a3b3aa; --line:#2a3b33;
+  --t-peach:#3a2a20; --t-mint:#1e3428; --t-sand:#3a3020; --t-rose:#3a2329; --t-lav:#2d2539; --t-sky:#1f2f3a;
+  --ok:#6fcf97; --err:#ff8a80; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --forest:#0f3428; --forest-2:#0a271e; --forest-ink:#e9f1ea;
+  --cream:#101b17; --paper:#17251f; --ink:#e8efe9; --muted:#a3b3aa; --line:#2a3b33;
+  --t-peach:#3a2a20; --t-mint:#1e3428; --t-sand:#3a3020; --t-rose:#3a2329; --t-lav:#2d2539; --t-sky:#1f2f3a;
+  --ok:#6fcf97; --err:#ff8a80; color-scheme:dark }
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+section,footer{scroll-margin-top:76px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{background:var(--cream);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6;overflow-x:hidden}
+h1,h2,h3{font-family:var(--display);line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-.01em}
+p{margin:0}
+a{color:inherit}
+button,input,select,textarea{font:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:6px}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:#c98a12}
+.dark .eyebrow{color:var(--gold)}
+.h2{font-size:clamp(2rem,4.2vw,3rem);font-weight:800}
+.h2 .gold{color:var(--gold)}
+.lede{color:var(--muted);max-width:44ch}
+.btn{display:inline-flex;align-items:center;gap:.6em;border:0;cursor:pointer;border-radius:999px;padding:.8em 1.5em;font-weight:700;text-decoration:none;transition:transform .15s ease,box-shadow .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn-gold{background:var(--gold);color:var(--gold-ink);box-shadow:0 6px 18px -8px rgba(242,179,61,.8)}
+.btn-ghost{background:transparent;color:var(--ink);border:1.5px solid currentColor}
+.dark .btn-ghost{color:var(--forest-ink)}
+.btn svg{width:1.05em;height:1.05em}
+.dark{background:var(--forest);color:var(--forest-ink)}
+.wave{display:block;width:100%;height:clamp(40px,6vw,80px)}
+
+/* Header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--forest);color:var(--forest-ink);border-bottom:1px solid rgba(255,255,255,.06)}
+.nav{display:flex;align-items:center;gap:24px;padding-block:14px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:auto}
+.brand svg{width:34px;height:34px;flex:none}
+.brand b{display:block;font-family:var(--display);font-size:1.3rem;font-weight:700;line-height:1}
+.brand small{display:block;font-size:.78rem;opacity:.75;letter-spacing:.06em}
+.nav ul{display:flex;gap:26px;list-style:none;margin:0;padding:0}
+.nav ul a{text-decoration:none;font-size:.95rem;opacity:.85;padding-block:6px;border-bottom:2px solid transparent}
+.nav ul a:hover,.nav ul a.on{opacity:1;color:var(--gold);border-color:var(--gold)}
+.menu-btn{display:none;background:none;border:0;color:inherit;cursor:pointer;padding:6px}
+.menu-btn svg{width:26px;height:26px}
+@media (max-width:900px){
+  .nav ul{display:none;position:absolute;left:0;right:0;top:100%;background:var(--forest-2);flex-direction:column;gap:0;padding:8px max(16px,env(safe-area-inset-right,0px)) 16px max(16px,env(safe-area-inset-left,0px))}
+  .nav ul.open{display:flex}
+  .nav ul a{display:block;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+  .menu-btn{display:block}
+  .nav .btn{display:none}
+}
+
+/* Hero */
+.hero{position:relative;overflow:hidden}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:24px;padding-top:clamp(32px,6vw,72px)}
+.hero-copy{padding-bottom:clamp(40px,6vw,80px);min-width:0}
+.hero h1{font-size:clamp(2.6rem,6.4vw,4.8rem);font-weight:800;margin:.35em 0 .4em}
+.hero h1 span{display:block;color:var(--gold)}
+.hero p.sub{font-size:1.12rem;max-width:40ch;opacity:.9;margin-bottom:28px}
+.hero .ctas{display:flex;flex-wrap:wrap;gap:12px}
+.trust{display:flex;flex-wrap:wrap;gap:22px 34px;margin-top:40px}
+.trust div{display:flex;align-items:center;gap:10px;font-size:.85rem;line-height:1.25}
+.trust svg{width:30px;height:30px;flex:none;color:var(--forest-ink);opacity:.9}
+.portrait{position:relative;display:flex;justify-content:center;align-items:center;padding-block:28px clamp(40px,6vw,72px)}
+.frame{position:relative;width:min(470px,100%);aspect-ratio:1;max-width:100%;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 50% 38%,#2f6a52 0%,var(--forest-2) 72%);box-shadow:0 0 0 8px rgba(242,179,61,.18),0 30px 60px -20px rgba(0,0,0,.55);isolation:isolate}
+.frame::before{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 30%,rgba(242,179,61,.38),transparent 60%);z-index:-1}
+.frame img{position:absolute;left:50%;top:10%;width:80%;height:auto;max-width:none;transform:translateX(-54%) scaleX(-1);filter:drop-shadow(0 18px 24px rgba(0,0,0,.35))}
+.portrait .ring{position:absolute;left:50%;top:50%;width:min(530px,112%);aspect-ratio:1;transform:translate(-50%,-50%);margin-top:-6px;border-radius:50%;border:2px dashed rgba(242,179,61,.5);pointer-events:none}
+.script-note{position:absolute;z-index:2;top:2%;left:0;font-family:var(--script);font-size:clamp(1.4rem,2.4vw,2rem);line-height:1;color:var(--forest-ink);transform:rotate(-6deg);text-align:left}
+.script-note svg{width:22px;height:22px;color:var(--gold)}
+.leaf-deco{position:absolute;color:var(--gold);opacity:.9}
+.hero .card-float{position:absolute;z-index:2;left:0;bottom:16%;background:var(--paper);color:var(--ink);border-radius:14px;padding:12px 14px;display:flex;gap:10px;align-items:center;box-shadow:0 18px 40px -18px rgba(0,0,0,.5);font-size:.82rem;line-height:1.25;max-width:210px}
+.card-float b{display:block;font-size:.95rem}
+.card-float .dot{width:10px;height:10px;border-radius:50%;background:#3fb26f;box-shadow:0 0 0 4px rgba(63,178,111,.2);flex:none}
+@media (max-width:860px){
+  .hero-grid{grid-template-columns:1fr}
+  .hero-copy{padding-bottom:8px}
+  .portrait{padding-top:56px}
+  .hero .card-float{left:4px;bottom:16%}
+}
+
+/* Services */
+.services{padding-block:clamp(40px,6vw,72px)}
+.svc-grid{display:grid;grid-template-columns:.8fr 2fr;gap:40px;align-items:start}
+.svc-intro{display:grid;gap:16px;position:sticky;top:110px}
+.svc-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.svc{background:var(--paper);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;border:1px solid var(--line);transition:transform .2s ease,box-shadow .2s ease}
+.svc:hover{transform:translateY(-3px);box-shadow:0 18px 34px -22px rgba(18,61,47,.45)}
+.svc .art{height:120px;display:grid;place-items:center}
+.svc .art svg{width:64px;height:64px;color:var(--forest)}
+:root[data-theme="dark"] .svc .art svg{color:var(--gold)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .svc .art svg{color:var(--gold)}}
+.svc .body{padding:16px 18px 18px;display:grid;gap:6px;flex:1}
+.svc h3{font-size:1.15rem;font-weight:700}
+.svc p{font-size:.9rem;color:var(--muted)}
+.svc a{font-size:.85rem;font-weight:700;text-decoration:none;margin-top:auto;padding-top:6px;color:var(--ink)}
+.svc a:hover{color:#c98a12}
+@media (max-width:980px){.svc-grid{grid-template-columns:1fr}.svc-intro{position:static}}
+@media (max-width:720px){.svc-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:440px){.svc-cards{grid-template-columns:1fr}}
+
+/* About */
+.about{position:relative}
+.about-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:40px;align-items:center;padding-block:clamp(36px,5vw,64px)}
+.about-copy{display:grid;gap:18px;min-width:0}
+.about-copy p{opacity:.88;max-width:48ch}
+.about-visual{position:relative;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;min-width:0}
+.quote-panel{background:var(--forest-2);border-radius:28px;padding:clamp(24px,4vw,44px);position:relative;overflow:hidden;min-height:300px;display:flex;flex-direction:column;justify-content:flex-end;border:1px solid rgba(255,255,255,.06)}
+.quote-panel .big{font-family:var(--display);font-size:clamp(1.5rem,2.6vw,2.1rem);font-weight:600;line-height:1.2}
+.quote-panel .sig{font-family:var(--script);font-size:1.8rem;color:var(--gold);margin-top:14px}
+.quote-panel .mark{position:absolute;top:10px;left:22px;font-family:var(--display);font-size:9rem;line-height:1;color:var(--gold);opacity:.22}
+.quote-panel img{position:absolute;right:-10px;bottom:0;height:88%;width:auto;opacity:.14;filter:grayscale(1)}
+.feature-card{background:var(--paper);color:var(--ink);border-radius:18px;padding:18px;display:grid;gap:16px;box-shadow:0 20px 40px -20px rgba(0,0,0,.45);width:190px}
+.feature-card div{display:flex;gap:10px;align-items:center;font-size:.85rem;line-height:1.25;font-weight:500}
+.feature-card div+div{border-top:1px solid var(--line);padding-top:14px}
+.feature-card svg{width:26px;height:26px;flex:none;color:var(--forest)}
+@media (max-width:900px){.about-grid{grid-template-columns:1fr}}
+@media (max-width:560px){.about-visual{grid-template-columns:1fr}.feature-card{width:auto}}
+
+/* Consultation modes */
+.modes{padding-block:clamp(40px,6vw,72px) 8px}
+.modes-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:20px;margin-bottom:28px}
+.mode-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.mode{border-radius:22px;padding:26px;display:grid;gap:12px;border:1px solid var(--line)}
+.mode.f2f{background:var(--t-sand)}
+.mode.onl{background:var(--t-mint)}
+.mode .top{display:flex;align-items:center;gap:12px}
+.mode .top svg{width:40px;height:40px;color:var(--forest);flex:none}
+.mode h3{font-size:1.5rem;font-weight:700}
+.mode ul{margin:0;padding-left:1.1em;color:var(--ink);display:grid;gap:4px;font-size:.95rem}
+.mode .tag{justify-self:start;font-size:.78rem;font-weight:700;background:var(--paper);border-radius:999px;padding:4px 12px}
+@media (max-width:700px){.mode-cards{grid-template-columns:1fr}}
+
+/* Booking */
+.booking{padding-block:clamp(24px,4vw,48px) clamp(40px,6vw,72px)}
+.book-grid{display:grid;grid-template-columns:.75fr 1.6fr;gap:36px;align-items:start}
+.book-side{display:grid;gap:18px;position:sticky;top:110px}
+.steps{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:14px;counter-reset:s}
+.steps li{display:grid;grid-template-columns:34px 1fr;gap:12px;align-items:start;font-size:.95rem;counter-increment:s}
+.steps li::before{content:counter(s);display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:var(--forest);color:var(--gold);font-weight:700;font-family:var(--display)}
+.steps b{display:block}
+.steps span{color:var(--muted);font-size:.88rem}
+.note-small{font-size:.82rem;color:var(--muted)}
+.booker{background:var(--paper);border:1px solid var(--line);border-radius:26px;padding:clamp(18px,3vw,30px);box-shadow:0 30px 60px -40px rgba(18,61,47,.55);display:grid;gap:22px;min-width:0}
+.seg{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;background:var(--cream);border-radius:999px;padding:5px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:.65em 1em;cursor:pointer;font-weight:700;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:8px}
+.seg button svg{width:18px;height:18px}
+.seg button[aria-pressed="true"]{background:var(--forest);color:var(--gold)}
+.row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.type-opt{border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer;display:grid;gap:2px;background:transparent;text-align:left;color:var(--ink)}
+.type-opt b{font-size:.98rem}
+.type-opt span{font-size:.82rem;color:var(--muted)}
+.type-opt[aria-pressed="true"]{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 12%,transparent)}
+.cal-wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:22px}
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-head b{font-family:var(--display);font-size:1.2rem}
+.icon-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;display:grid;place-items:center}
+.icon-btn:disabled{opacity:.35;cursor:not-allowed}
+.icon-btn svg{width:16px;height:16px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.cal .dow{font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.06em;padding-bottom:4px}
+.day{aspect-ratio:1;max-width:100%;border:0;border-radius:12px;background:transparent;color:var(--ink);cursor:pointer;font-weight:500;position:relative;font-variant-numeric:tabular-nums}
+.day:disabled{color:var(--muted);opacity:.38;cursor:default}
+.day.avail{background:var(--cream)}
+.day.avail::after{content:"";position:absolute;bottom:6px;left:50%;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--ok)}
+.day.avail:hover{outline:1.5px solid var(--gold)}
+.day.sel{background:var(--forest)!important;color:var(--gold)}
+.day.sel::after{background:var(--gold)}
+.day.today{box-shadow:inset 0 0 0 1.5px var(--line)}
+.slots-h{font-weight:700;margin-bottom:4px}
+.slots-sub{font-size:.82rem;color:var(--muted);margin-bottom:12px}
+.slots{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.slot{border:1.5px solid var(--line);background:transparent;color:var(--ink);border-radius:12px;padding:10px 6px;cursor:pointer;font-weight:700;font-variant-numeric:tabular-nums;display:grid;gap:0;line-height:1.2}
+.slot small{font-weight:400;color:var(--muted);font-size:.72rem}
+.slot:hover:not(:disabled){border-color:var(--gold)}
+.slot[aria-pressed="true"]{background:var(--gold);border-color:var(--gold);color:var(--gold-ink)}
+.slot[aria-pressed="true"] small{color:var(--gold-ink)}
+.slot:disabled{text-decoration:line-through;opacity:.45;cursor:not-allowed}
+.empty{border:1.5px dashed var(--line);border-radius:14px;padding:22px 16px;text-align:center;color:var(--muted);font-size:.9rem}
+.form{display:grid;gap:14px}
+.form .row2{gap:14px}
+label.f{display:grid;gap:6px;font-size:.85rem;font-weight:700}
+label.f input,label.f select,label.f textarea{border:1.5px solid var(--line);border-radius:12px;padding:.7em .9em;background:var(--cream);color:var(--ink);font-weight:400;width:100%;min-width:0}
+label.f textarea{min-height:84px;resize:vertical}
+label.f input:focus,label.f textarea:focus,label.f select:focus{outline:none;border-color:var(--gold)}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:.85rem;color:var(--muted)}
+.check input{margin-top:4px;accent-color:var(--forest);width:16px;height:16px;flex:none}
+.summary{background:var(--cream);border-radius:14px;padding:14px 16px;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.9rem}
+.summary b{font-family:var(--display)}
+.msg{border-radius:12px;padding:12px 14px;font-size:.9rem}
+.msg.err{background:color-mix(in srgb,var(--err) 12%,transparent);color:var(--err)}
+.done{display:grid;gap:14px;text-align:center;justify-items:center;padding:12px 0}
+.done .tick{width:64px;height:64px;border-radius:50%;background:var(--forest);color:var(--gold);display:grid;place-items:center}
+.done .tick svg{width:30px;height:30px}
+.done h3{font-size:1.6rem}
+.done pre{white-space:pre-wrap;text-align:left;background:var(--cream);border-radius:12px;padding:14px;font-family:var(--body);font-size:.88rem;width:100%;margin:0;max-width:520px}
+.form-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.list-panel{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:20px;display:grid;gap:12px;margin-top:24px}
+.list-panel h3{font-size:1.25rem}
+.appt{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;border-top:1px solid var(--line);padding-top:12px}
+.appt .when{background:var(--forest);color:var(--gold);border-radius:12px;padding:8px 10px;text-align:center;line-height:1.1;font-family:var(--display);min-width:62px}
+.appt .when small{display:block;font-family:var(--body);font-size:.7rem;color:var(--forest-ink)}
+.appt .who{min-width:0;font-size:.88rem;overflow-wrap:anywhere}
+.appt .who b{font-size:.98rem}
+.pill{display:inline-block;font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 9px;background:var(--t-mint);margin-right:4px}
+.pill.f2f{background:var(--t-sand)}
+.link-btn{background:none;border:0;color:var(--err);cursor:pointer;font-weight:700;font-size:.85rem}
+@media (max-width:1000px){.book-grid{grid-template-columns:1fr}.book-side{position:static}}
+@media (max-width:640px){.cal-wrap{grid-template-columns:1fr}.row2{grid-template-columns:1fr}.appt{grid-template-columns:auto 1fr}.appt .link-btn{grid-column:2}}
+
+/* FAQ */
+.faq{padding-block:clamp(40px,6vw,72px)}
+.faq-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:40px;align-items:start}
+.faq-side{display:grid;gap:16px;position:relative}
+.faq-side .script{font-family:var(--script);font-size:2.2rem;color:var(--forest);transform:rotate(-4deg);margin-top:10px;line-height:1}
+:root[data-theme="dark"] .faq-side .script{color:var(--gold)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .faq-side .script{color:var(--gold)}}
+details{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:0 18px}
+details+details{margin-top:10px}
+summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:16px;padding:16px 0;font-weight:700}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--display);font-size:1.4rem;line-height:1;color:#c98a12;flex:none}
+details[open] summary::after{content:"–"}
+details p{padding-bottom:16px;color:var(--muted);font-size:.95rem;max-width:62ch}
+@media (max-width:860px){.faq-grid{grid-template-columns:1fr}}
+
+/* Urgent band */
+.urgent{position:relative;overflow:hidden}
+.urgent-in{display:grid;grid-template-columns:auto 1fr auto;gap:28px;align-items:center;padding-block:36px}
+.urgent .ic{width:64px;height:64px;border-radius:50%;background:rgba(242,179,61,.16);display:grid;place-items:center;color:var(--gold)}
+.urgent .ic svg{width:30px;height:30px}
+.urgent h3{font-size:1.6rem;font-weight:700;margin-bottom:6px}
+.urgent p{opacity:.85;max-width:60ch}
+@media (max-width:760px){.urgent-in{grid-template-columns:1fr}}
+
+/* Footer */
+.perks{padding-block:30px}
+.perks-in{display:flex;flex-wrap:wrap;justify-content:space-around;gap:20px}
+.perks div{display:flex;gap:12px;align-items:center;font-size:.85rem;line-height:1.25}
+.perks svg{width:30px;height:30px;color:var(--forest);flex:none}
+.perks b{display:block;font-size:.95rem}
+:root[data-theme="dark"] .perks svg{color:var(--gold)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .perks svg{color:var(--gold)}}
+footer.foot{padding-block:48px 24px}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.3fr;gap:28px}
+.foot h4{font-family:var(--display);font-size:1.05rem;margin:0 0 12px;color:var(--gold)}
+.foot ul{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:.9rem}
+.foot ul a{text-decoration:none;opacity:.8}
+.foot ul a:hover{opacity:1;color:var(--gold)}
+.foot .tagline{opacity:.75;font-size:.9rem;margin-top:12px;max-width:30ch}
+.copy-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.copy-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:inherit;border-radius:999px;padding:2px 10px;font-size:.75rem;cursor:pointer}
+.legal{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;border-top:1px solid rgba(255,255,255,.1);margin-top:36px;padding-top:18px;font-size:.8rem;opacity:.7}
+@media (max-width:860px){.foot-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.foot-grid{grid-template-columns:1fr}}
+
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--forest);color:var(--forest-ink);padding:10px 18px;border-radius:999px;font-size:.9rem;box-shadow:0 10px 30px -10px rgba(0,0,0,.5);z-index:100}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-leaf" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5 19c0-8 5-14 15-15-1 10-7 15-15 15Zm0 0 8-8"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M12 20s-7.5-4.6-9-9.4C2 7.2 4.3 4.5 7.2 4.5c2 0 3.6 1.2 4.8 3 1.2-1.8 2.8-3 4.8-3 2.9 0 5.2 2.7 4.2 6.1C19.5 15.4 12 20 12 20Z"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M12 3 4.5 6v5.5c0 4.6 3.2 8.3 7.5 9.5 4.3-1.2 7.5-4.9 7.5-9.5V6L12 3Z"/><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="m8.8 12 2.2 2.2 4.4-4.4"/></symbol>
+    <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="m16 10.5 5-3v9l-5-3"/></symbol>
+    <symbol id="i-clinic" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M4 20V9l8-5 8 5v11H4Zm6 0v-5h4v5"/><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M12 8v4m-2-2h4"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M3.5 10h17M8 3v4m8-4v4"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="m15 5-7 7 7 7"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-ear" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M7 9a5 5 0 1 1 10 0c0 3-3 4-3 7a3 3 0 0 1-5.5 1.6M10 9a2 2 0 1 1 4 0"/></symbol>
+    <symbol id="i-lifebuoy" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="m6 6 3.5 3.5m5 5L18 18m0-12-3.5 3.5m-5 5L6 18"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M12 7.5V12l3 2"/></symbol>
+  </defs>
+</svg>
+
+<header class="top">
+  <nav class="wrap nav" aria-label="Main">
+    <a class="brand" href="#home">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 35c-1-9 0-17 7-25" fill="none" stroke="#f2b33d" stroke-width="2.2" stroke-linecap="round"/><path d="M21 23c-6-1-10-5-11-12 7 0 11 4 11 12Zm2-5c1-6 5-9 11-9-1 6-5 9-11 9Zm-2 10c-5 0-9-3-11-8 6-1 10 2 11 8Z" fill="#f2b33d"/></svg>
+      <span><b>Dr. Minerva Molon</b><small>Psychiatry &amp; Mental Health</small></span>
+    </a>
+    <ul id="navList">
+      <li><a href="#home" class="on">Home</a></li>
+      <li><a href="#book">Book</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#consultations">Consultations</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a class="btn btn-gold" href="#book">Book now <svg><use href="#i-arrow"/></svg></a>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false" aria-controls="navList"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+  </nav>
+</header>
+
+<main>
+<section class="hero dark" id="home">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow">Psychiatric care for adults &amp; families</p>
+      <h1>Peace of Mind<span>Starts Here.</span></h1>
+      <p class="sub">Compassionate, evidence-based psychiatric care. Meet Dr. Minerva in the clinic or online, wherever you are.</p>
+      <div class="ctas">
+        <a class="btn btn-gold" href="#book">Book a consultation <svg><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-ghost" href="#services">How I can help</a>
+      </div>
+      <div class="trust">
+        <div><svg><use href="#i-shield"/></svg><span>Private &amp;<br>confidential</span></div>
+        <div><svg><use href="#i-clinic"/></svg><span>Face-to-face<br>consultations</span></div>
+        <div><svg><use href="#i-video"/></svg><span>Secure online<br>sessions</span></div>
+      </div>
+    </div>
+    <div class="portrait">
+      <div class="ring" aria-hidden="true"></div>
+      <svg class="leaf-deco" style="top:38%;left:0;width:46px;height:46px;z-index:2" aria-hidden="true"><use href="#i-leaf"/></svg>
+      <svg class="leaf-deco" style="bottom:14%;right:0;width:58px;height:58px;transform:scaleX(-1);z-index:2" aria-hidden="true"><use href="#i-leaf"/></svg>
+      <p class="script-note">Healing begins<br>with being heard <svg><use href="#i-heart"/></svg></p>
+      <div class="frame"><img src="/images/dr-minerva-molon.webp" alt="Dr. Minerva Molon, psychiatrist" width="600" height="920"></div>
+      <div class="card-float"><span class="dot"></span><span><b>Now booking</b><span id="nextAvail">Clinic &amp; online slots</span></span></div>
+    </div>
+  </div>
+  <svg class="wave" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true" style="margin-bottom:-1px"><path d="M0 40c240 40 480 40 720 10s480-40 720 0v30H0Z" fill="var(--cream)"/></svg>
+</section>
+
+<section class="booking" id="book">
+  <div class="wrap book-grid">
+    <aside class="book-side">
+      <p class="eyebrow">Online booking</p>
+      <h2 class="h2">Book Your<br>Appointment</h2>
+      <ol class="steps">
+        <li><div><b>Choose how to meet</b><span>Face-to-face or online.</span></div></li>
+        <li><div><b>Pick a date and time</b><span>Green dots show days with open slots.</span></div></li>
+        <li><div><b>Tell us about you</b><span>Just your contact details and, if you like, a short note.</span></div></li>
+      </ol>
+      <p class="note-small" id="tzNote">Times are shown in clinic time.</p>
+    </aside>
+
+    <div>
+      <div class="booker" id="booker">
+        <div id="stepPick" style="display:grid;gap:22px">
+          <div class="seg" role="group" aria-label="Consultation mode">
+            <button type="button" id="modeF2F" aria-pressed="true"><svg><use href="#i-clinic"/></svg>Face-to-face</button>
+            <button type="button" id="modeOnl" aria-pressed="false"><svg><use href="#i-video"/></svg>Online</button>
+          </div>
+          <div class="row2" role="group" aria-label="Consultation type">
+            <button type="button" class="type-opt" id="typeInitial" aria-pressed="true"><b>First consultation</b><span>About 60 minutes · full assessment</span></button>
+            <button type="button" class="type-opt" id="typeFollow" aria-pressed="false"><b>Follow-up visit</b><span>About 30 minutes · for returning patients</span></button>
+          </div>
+          <div class="cal-wrap">
+            <div>
+              <div class="cal-head">
+                <button type="button" class="icon-btn" id="prevM" aria-label="Previous month"><svg><use href="#i-left"/></svg></button>
+                <b id="monthLabel" aria-live="polite">Month</b>
+                <button type="button" class="icon-btn" id="nextM" aria-label="Next month"><svg><use href="#i-right"/></svg></button>
+              </div>
+              <div class="cal" id="cal" role="grid" aria-label="Choose a date"></div>
+            </div>
+            <div>
+              <p class="slots-h" id="slotsTitle">Available times</p>
+              <p class="slots-sub" id="slotsSub">Pick a date to see open times.</p>
+              <div id="slots"></div>
+            </div>
+          </div>
+        </div>
+
+        <form class="form" id="stepForm" hidden novalidate>
+          <div class="summary" id="summary"></div>
+          <div class="row2">
+            <label class="f" for="fName">Full name<input id="fName" autocomplete="name" required></label>
+            <label class="f" for="fEmail">Email<input id="fEmail" type="email" autocomplete="email" required></label>
+          </div>
+          <div class="row2">
+            <label class="f" for="fPhone">Mobile / WhatsApp<input id="fPhone" type="tel" autocomplete="tel" required></label>
+            <label class="f" for="fAge">Patient's age<input id="fAge" type="number" min="1" max="120" inputmode="numeric"></label>
+          </div>
+          <label class="f" for="fReason">What would you like help with? <span style="font-weight:400;color:var(--muted)">(optional)</span><textarea id="fReason" maxlength="600" placeholder="A sentence or two is enough. You can share more during the consultation."></textarea></label>
+          <label class="check" for="fConsent"><input type="checkbox" id="fConsent" required><span>I agree that my details may be used to arrange this appointment and will be kept confidential.</span></label>
+          <div class="msg err" id="formErr" hidden></div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-ghost" id="backBtn"><svg style="transform:scaleX(-1)"><use href="#i-arrow"/></svg>Change time</button>
+            <button type="submit" class="btn btn-gold" id="submitBtn">Confirm booking <svg><use href="#i-check"/></svg></button>
+          </div>
+        </form>
+
+        <div class="done" id="stepDone" hidden>
+          <div class="tick"><svg><use href="#i-check"/></svg></div>
+          <h3 id="doneTitle">Appointment booked</h3>
+          <p id="doneText" style="color:var(--muted);max-width:46ch"></p>
+          <pre id="doneSummary"></pre>
+          <div class="copy-row" id="doneActions" style="justify-content:center"></div>
+          <button type="button" class="btn btn-ghost" id="againBtn">Book another appointment</button>
+        </div>
+      </div>
+
+      <div class="list-panel" id="myPanel" hidden>
+        <h3>Your appointments</h3>
+        <div id="myList"></div>
+      </div>
+      <div class="list-panel" id="adminPanel" hidden>
+        <h3>Appointment book <span class="pill" style="vertical-align:middle">Only visible to the clinic</span></h3>
+        <div id="adminList"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="services" id="services">
+  <div class="wrap svc-grid">
+    <div class="svc-intro">
+      <p class="eyebrow">Areas of care</p>
+      <h2 class="h2">How I Can Help</h2>
+      <p class="lede">Every plan starts with listening. Together we look at what you are going through and choose the care that fits your life.</p>
+      <div><a class="btn btn-ghost" href="#book">Book a consultation <svg><use href="#i-arrow"/></svg></a></div>
+    </div>
+    <div class="svc-cards">
+      <article class="svc"><div class="art" style="background:var(--t-peach)"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M10 34c6-10 10 10 16 0s10 10 16 0 10 10 12 4" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="32" r="26" fill="none" stroke="currentColor" stroke-width="2" opacity=".35"/></svg></div><div class="body"><h3>Anxiety &amp; Panic</h3><p>Constant worry, panic attacks, phobias and social anxiety.</p><a href="#book">Book now →</a></div></article>
+      <article class="svc"><div class="art" style="background:var(--t-mint)"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M14 44a18 18 0 0 1 36 0" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M32 14v8M14 22l5 5m31-5-5 5M8 44h48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></div><div class="body"><h3>Depression &amp; Mood</h3><p>Low mood, loss of interest, bipolar and mood disorders.</p><a href="#book">Book now →</a></div></article>
+      <article class="svc"><div class="art" style="background:var(--t-sand)"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="12" y="16" width="40" height="30" rx="5" fill="none" stroke="currentColor" stroke-width="3"/><path d="M24 54h16M32 46v8M20 34l6-6 5 5 7-9 6 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="body"><h3>Stress &amp; Burnout</h3><p>Work pressure, exhaustion and caregiver fatigue.</p><a href="#book">Book now →</a></div></article>
+      <article class="svc"><div class="art" style="background:var(--t-lav)"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M40 12a20 20 0 1 0 12 30A16 16 0 0 1 40 12Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M44 22h6l-6 6h6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="body"><h3>Sleep Problems</h3><p>Insomnia, restless nights and disrupted sleep patterns.</p><a href="#book">Book now →</a></div></article>
+      <article class="svc"><div class="art" style="background:var(--t-rose)"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 52s-16-9-19-19c-2-7 3-13 9-13 4 0 7 2 10 6 3-4 6-6 10-6 6 0 11 6 9 13-3 10-19 19-19 19Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M32 26v14" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></div><div class="body"><h3>Grief &amp; Life Changes</h3><p>Loss, relocation, family changes and difficult transitions.</p><a href="#book">Book now →</a></div></article>
+      <article class="svc"><div class="art" style="background:var(--t-sky)"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="14" y="22" width="36" height="16" rx="8" transform="rotate(-35 32 30)" fill="none" stroke="currentColor" stroke-width="3"/><path d="m27 21 10 15" stroke="currentColor" stroke-width="3"/><path d="M14 50h20" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg></div><div class="body"><h3>Medication Review</h3><p>Starting, adjusting or reviewing psychiatric medication safely.</p><a href="#book">Book now →</a></div></article>
+    </div>
+  </div>
+</section>
+
+<section class="about dark" id="about">
+  <svg class="wave" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true" style="margin-top:-1px"><path d="M0 0h1440v30c-240 40-480 50-720 20S240 10 0 40Z" fill="var(--cream)"/></svg>
+  <div class="wrap about-grid">
+    <div class="about-copy">
+      <p class="eyebrow">Meet Dr. Minerva Molon</p>
+      <h2 class="h2">More Than<br><span class="gold">A Diagnosis</span></h2>
+      <p>Dr. Minerva Molon is a psychiatrist who believes good mental health care starts with time and attention. She sees each patient as a whole person, with a history, a family and goals of their own.</p>
+      <p>Her approach combines careful assessment, clear explanations and, when it helps, medication and therapy working together. Patients leave each visit knowing the plan and why it was chosen.</p>
+      <div><a class="btn btn-gold" href="#book">Book with Dr. Minerva <svg><use href="#i-arrow"/></svg></a></div>
+    </div>
+    <div class="about-visual">
+      <div class="quote-panel">
+        <span class="mark" aria-hidden="true">“</span>
+        <img src="/images/dr-minerva-molon-full.webp" alt="" aria-hidden="true">
+        <p class="big">You do not have to have everything figured out before you ask for help.</p>
+        <p class="sig">Dr. Minerva</p>
+      </div>
+      <div class="feature-card">
+        <div><svg><use href="#i-ear"/></svg>Listening comes first</div>
+        <div><svg><use href="#i-leaf"/></svg>Evidence-based treatment</div>
+        <div><svg><use href="#i-shield"/></svg>Strictly confidential</div>
+      </div>
+    </div>
+  </div>
+  <svg class="wave" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true" style="margin-bottom:-1px"><path d="M0 50c300-40 560-40 820-10s420 30 620-10v50H0Z" fill="var(--cream)"/></svg>
+</section>
+
+<section class="modes" id="consultations">
+  <div class="wrap">
+    <div class="modes-head">
+      <div><p class="eyebrow">Two ways to meet</p><h2 class="h2">Choose Your Consultation</h2></div>
+      <p class="lede">Both options give you the same time, care and confidentiality. Pick whichever feels easier.</p>
+    </div>
+    <div class="mode-cards">
+      <div class="mode f2f">
+        <div class="top"><svg><use href="#i-clinic"/></svg><h3>Face-to-Face</h3></div>
+        <ul><li>In-person visit at the clinic</li><li>Best for first assessments and complex concerns</li><li>Family members welcome when helpful</li></ul>
+        <span class="tag" id="f2fDays">Mon · Wed · Fri · Sat morning</span>
+      </div>
+      <div class="mode onl">
+        <div class="top"><svg><use href="#i-video"/></svg><h3>Online</h3></div>
+        <ul><li>Secure video call from home, anywhere in the world</li><li>Ideal for follow-ups and patients living abroad</li><li>Video link sent by email before your session</li></ul>
+        <span class="tag" id="onlDays">Tue · Thu (incl. evenings) · Sat</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="faq" id="faq">
+  <div class="wrap faq-grid">
+    <div class="faq-side">
+      <p class="eyebrow">Before your visit</p>
+      <h2 class="h2">Questions From<br><span style="color:#c98a12">Patients</span></h2>
+      <p class="lede">Reaching out for the first time can feel like a big step. Here is what to expect.</p>
+      <p class="script">You are not alone ♡</p>
+    </div>
+    <div>
+      <details open><summary>What happens at the first consultation?</summary><p>Dr. Minerva will ask about what brings you in, your health history, sleep, work and family life. You can share as much or as little as you are comfortable with. At the end she explains her assessment and agrees a plan with you.</p></details>
+      <details><summary>What is the difference between a psychiatrist and a psychologist?</summary><p>A psychiatrist is a medical doctor who specializes in mental health. Psychiatrists can diagnose conditions, prescribe and manage medication, and coordinate care with therapists and other doctors.</p></details>
+      <details><summary>Do I need a referral?</summary><p>No referral is needed to book. If you have reports from another doctor or previous treatment, please bring them or send them before the visit.</p></details>
+      <details><summary>How do online consultations work?</summary><p>You receive a secure video link by email before the session. Join from a quiet, private place using a phone, tablet or computer with a camera.</p></details>
+      <details><summary>Is everything I share confidential?</summary><p>Yes. What you discuss stays between you and the doctor, except in the rare cases where the law requires otherwise, such as a serious risk to someone's safety. Dr. Minerva will explain this at your first visit.</p></details>
+      <details><summary>Can I reschedule or cancel?</summary><p>Yes. Please let the clinic know at least 24 hours ahead so the time can be offered to another patient.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="urgent dark" aria-labelledby="urgentH">
+  <svg class="wave" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true" style="margin-top:-1px"><path d="M0 0h1440v40c-260 30-520 30-780 0S220 20 0 50Z" fill="var(--cream)"/></svg>
+  <div class="wrap urgent-in">
+    <div class="ic"><svg><use href="#i-lifebuoy"/></svg></div>
+    <div>
+      <h3 id="urgentH">Need help right now?</h3>
+      <p>This booking page is not for emergencies. If you or someone near you is in immediate danger or thinking about suicide, call your local emergency number or go to the nearest hospital emergency room.</p>
+    </div>
+    <a class="btn btn-gold" href="#contact">Contact the clinic</a>
+  </div>
+</section>
+
+<div class="perks">
+  <div class="wrap perks-in">
+    <div><svg><use href="#i-shield"/></svg><span><b>Confidential</b>Your privacy is protected</span></div>
+    <div><svg><use href="#i-video"/></svg><span><b>Online sessions</b>Join from anywhere</span></div>
+    <div><svg><use href="#i-clock"/></svg><span><b>Evening slots</b>Tue &amp; Thu online</span></div>
+  </div>
+</div>
+</main>
+
+<footer class="foot dark" id="contact">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href="#home" style="margin:0">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 35c-1-9 0-17 7-25" fill="none" stroke="#f2b33d" stroke-width="2.2" stroke-linecap="round"/><path d="M21 23c-6-1-10-5-11-12 7 0 11 4 11 12Zm2-5c1-6 5-9 11-9-1 6-5 9-11 9Zm-2 10c-5 0-9-3-11-8 6-1 10 2 11 8Z" fill="#f2b33d"/></svg>
+          <span><b>Dr. Minerva Molon</b><small>Psychiatry &amp; Mental Health</small></span>
+        </a>
+        <p class="tagline">Gentle, expert care for the mind. In the clinic and online.</p>
+      </div>
+      <div><h4>Quick links</h4><ul><li><a href="#home">Home</a></li><li><a href="#about">About</a></li><li><a href="#consultations">Consultations</a></li><li><a href="#book">Book an appointment</a></li><li><a href="#faq">FAQ</a></li></ul></div>
+      <div><h4>Areas of care</h4><ul><li><a href="#services">Anxiety &amp; panic</a></li><li><a href="#services">Depression &amp; mood</a></li><li><a href="#services">Stress &amp; burnout</a></li><li><a href="#services">Sleep problems</a></li><li><a href="#services">Medication review</a></li></ul></div>
+      <div><h4>Contact</h4><ul id="contactList"></ul></div>
+    </div>
+    <div class="legal"><span>© <span id="yr">2026</span> Dr. Minerva Molon. All rights reserved.</span><span>Information on this site does not replace a medical consultation.</span></div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" hidden role="status"></div>
+
+<script>
+/* ===== Clinic settings: edit these ===== */
+const CONFIG = {
+  doctor: "Dr. Minerva Molon",
+  timeZone: "Asia/Manila",          // clinic time zone
+  tzLabel: "Philippine time",
+  phone: "+63 900 000 0000",         // replace with real number
+  email: "appointments@example.com", // replace with real email
+  address: "Clinic address to be added",
+  hoursText: "Mon–Fri 9:00–17:00 · Sat 9:00–12:00",
+  bookAheadDays: 60,                 // how far ahead patients can book
+  minNoticeHours: 12,                // no bookings closer than this
+  // Hourly start times per weekday (0 = Sunday). One appointment per hour, either mode.
+  hours: {
+    0: { inPerson: [],                         online: [] },
+    1: { inPerson: [9,10,11,14,15,16],         online: [] },
+    2: { inPerson: [],                         online: [9,10,11,14,15,16,18,19] },
+    3: { inPerson: [9,10,11,14,15,16],         online: [] },
+    4: { inPerson: [],                         online: [9,10,11,14,15,16,18,19] },
+    5: { inPerson: [9,10,11,14,15],            online: [] },
+    6: { inPerson: [9,10],                     online: [11] }
+  },
+  closedDates: [],                    // e.g. "2026-12-25"
+  // When this site is hosted on its own domain, set a webhook URL (e.g. a GoHighLevel or Zapier webhook)
+  // and every booking is POSTed there as JSON.
+  bookingEndpoint: ""
+};
+
+/* ===== Time helpers (clinic time zone) ===== */
+const pad = n => String(n).padStart(2,"0");
+const ymd = (y,m,d) => `${y}-${pad(m)}-${pad(d)}`;
+function partsIn(tz, t){
+  const p = {}; new Intl.DateTimeFormat("en-US",{timeZone:tz,year:"numeric",month:"numeric",day:"numeric",hour:"numeric",minute:"numeric",hourCycle:"h23"}).formatToParts(new Date(t)).forEach(x=>p[x.type]=x.value);
+  return {y:+p.year,m:+p.month,d:+p.day,h:+p.hour%24,mi:+p.minute};
+}
+function tzOffset(tz,t){const p=partsIn(tz,t);return Date.UTC(p.y,p.m-1,p.d,p.h,p.mi)-Math.floor(t/60000)*60000;}
+function clinicToUTC(y,m,d,h){let g=Date.UTC(y,m-1,d,h);let t=g-tzOffset(CONFIG.timeZone,g);return g-tzOffset(CONFIG.timeZone,t);}
+const viewerTZ = (()=>{try{return Intl.DateTimeFormat().resolvedOptions().timeZone}catch(e){return CONFIG.timeZone}})();
+const sameTZ = () => tzOffset(viewerTZ,Date.now())===tzOffset(CONFIG.timeZone,Date.now());
+const fmtHour = h => { const ap=h<12?"AM":"PM"; const hh=h%12||12; return `${hh}:00 ${ap}`; };
+const fmtLocal = t => new Date(t).toLocaleTimeString([], {hour:"numeric",minute:"2-digit"});
+const fmtLocalDay = t => new Date(t).toLocaleDateString([], {weekday:"short",day:"numeric",month:"short"});
+const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const DOW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const dayName = (y,m,d) => new Date(Date.UTC(y,m-1,d)).toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric",timeZone:"UTC"});
+const weekday = (y,m,d) => new Date(Date.UTC(y,m-1,d)).getUTCDay();
+
+/* ===== State ===== */
+const S = { mode:"inPerson", type:"initial", viewY:0, viewM:0, date:null, hour:null, taken:new Set(), db:null, user:null, uid:null, admin:false, myBookings:[] };
+const $ = id => document.getElementById(id);
+const nowP = partsIn(CONFIG.timeZone, Date.now());
+S.viewY = nowP.y; S.viewM = nowP.m;
+const maxT = Date.now() + CONFIG.bookAheadDays*864e5;
+
+function hoursFor(y,m,d,mode){
+  const key = ymd(y,m,d);
+  if (CONFIG.closedDates.includes(key)) return [];
+  const list = (CONFIG.hours[weekday(y,m,d)]||{})[mode]||[];
+  return list.filter(h => { const t=clinicToUTC(y,m,d,h); return t >= Date.now()+CONFIG.minNoticeHours*36e5 && t <= maxT; });
+}
+const slotId = (date,h) => `${date}_${pad(h)}`;
+const freeHours = (y,m,d,mode) => hoursFor(y,m,d,mode).filter(h=>!S.taken.has(slotId(ymd(y,m,d),h)));
+
+/* ===== Calendar ===== */
+function renderCal(){
+  const {viewY:y, viewM:m} = S;
+  $("monthLabel").textContent = `${MONTHS[m-1]} ${y}`;
+  $("prevM").disabled = (y===nowP.y && m===nowP.m);
+  const maxP = partsIn(CONFIG.timeZone, maxT);
+  $("nextM").disabled = (y>maxP.y) || (y===maxP.y && m>=maxP.m);
+  const first = weekday(y,m,1), days = new Date(Date.UTC(y,m,0)).getUTCDate();
+  let html = DOW.map(d=>`<div class="dow">${d.slice(0,2)}</div>`).join("");
+  for (let i=0;i<first;i++) html += `<span></span>`;
+  for (let d=1; d<=days; d++){
+    const key = ymd(y,m,d), avail = freeHours(y,m,d,S.mode).length>0;
+    const isToday = y===nowP.y&&m===nowP.m&&d===nowP.d;
+    const cls = ["day", avail?"avail":"", S.date===key?"sel":"", isToday?"today":""].join(" ");
+    html += `<button type="button" class="${cls}" data-d="${key}" ${avail?"":"disabled"} aria-label="${dayName(y,m,d)}${avail?", times available":", no times"}" aria-pressed="${S.date===key}">${d}</button>`;
+  }
+  $("cal").innerHTML = html;
+}
+function renderSlots(){
+  const box = $("slots");
+  if (!S.date){ $("slotsTitle").textContent="Available times"; $("slotsSub").textContent="Pick a date with a green dot to see open times."; box.innerHTML=`<div class="empty">No date selected yet</div>`; return; }
+  const [y,m,d] = S.date.split("-").map(Number);
+  const all = hoursFor(y,m,d,S.mode);
+  $("slotsTitle").textContent = dayName(y,m,d);
+  $("slotsSub").textContent = `${S.mode==="online"?"Online":"Face-to-face"} · ${CONFIG.tzLabel}`;
+  if (!all.length){ box.innerHTML = `<div class="empty">No ${S.mode==="online"?"online":"clinic"} times on this day. Try another date or switch consultation type.</div>`; return; }
+  const showLocal = !sameTZ();
+  box.innerHTML = `<div class="slots">${all.map(h=>{
+    const taken = S.taken.has(slotId(S.date,h));
+    const local = showLocal ? `<small>${fmtLocalDay(clinicToUTC(y,m,d,h))}, ${fmtLocal(clinicToUTC(y,m,d,h))} your time</small>` : (taken?`<small>Booked</small>`:"");
+    return `<button type="button" class="slot" data-h="${h}" ${taken?"disabled":""} aria-pressed="${S.hour===h}">${fmtHour(h)}${local}</button>`;
+  }).join("")}</div>`;
+}
+function firstAvailable(){
+  for (let i=0;i<=CONFIG.bookAheadDays;i++){
+    const p = partsIn(CONFIG.timeZone, Date.now()+i*864e5);
+    const f = freeHours(p.y,p.m,p.d,S.mode);
+    if (f.length) return {y:p.y,m:p.m,d:p.d,h:f[0]};
+  }
+  return null;
+}
+function updateNext(){
+  const n = firstAvailable();
+  $("nextAvail").textContent = n ? `Next ${S.mode==="online"?"online":"clinic"} slot: ${new Date(Date.UTC(n.y,n.m-1,n.d)).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short",timeZone:"UTC"})}, ${fmtHour(n.h)}` : "Contact the clinic for times";
+}
+function renderAll(){ renderCal(); renderSlots(); updateNext(); }
+
+$("cal").addEventListener("click", e => { const b=e.target.closest(".day"); if(!b||b.disabled) return; S.date=b.dataset.d; S.hour=null; renderCal(); renderSlots(); });
+$("slots").addEventListener("click", e => { const b=e.target.closest(".slot"); if(!b||b.disabled) return; S.hour=+b.dataset.h; renderSlots(); openForm(); });
+$("prevM").onclick = () => { S.viewM--; if(S.viewM<1){S.viewM=12;S.viewY--;} renderCal(); };
+$("nextM").onclick = () => { S.viewM++; if(S.viewM>12){S.viewM=1;S.viewY++;} renderCal(); };
+function setMode(mode){
+  S.mode=mode; $("modeF2F").setAttribute("aria-pressed", mode==="inPerson"); $("modeOnl").setAttribute("aria-pressed", mode==="online");
+  if (S.date){ const [y,m,d]=S.date.split("-").map(Number); if(!freeHours(y,m,d,mode).length) S.date=null; }
+  S.hour=null; renderAll();
+}
+$("modeF2F").onclick=()=>setMode("inPerson"); $("modeOnl").onclick=()=>setMode("online");
+function setType(t){ S.type=t; $("typeInitial").setAttribute("aria-pressed",t==="initial"); $("typeFollow").setAttribute("aria-pressed",t==="followup"); }
+$("typeInitial").onclick=()=>setType("initial"); $("typeFollow").onclick=()=>setType("followup");
+
+/* ===== Form ===== */
+const show = (id) => { ["stepPick","stepForm","stepDone"].forEach(s=>$(s).hidden = s!==id); $("stepPick").style.display = id==="stepPick"?"grid":"none"; };
+function describe(){
+  const [y,m,d]=S.date.split("-").map(Number);
+  return { dateLabel: dayName(y,m,d), time: fmtHour(S.hour), modeLabel: S.mode==="online"?"Online video consultation":"Face-to-face at the clinic", typeLabel: S.type==="initial"?"First consultation (about 60 min)":"Follow-up visit (about 30 min)", utc: clinicToUTC(y,m,d,S.hour) };
+}
+function openForm(){
+  const x = describe();
+  $("summary").innerHTML = `<span><b>${x.dateLabel}</b></span><span>${x.time} (${CONFIG.tzLabel})</span><span>${x.modeLabel}</span><span>${x.typeLabel}</span>`;
+  $("formErr").hidden = true; show("stepForm");
+  $("booker").scrollIntoView({behavior:"smooth",block:"start"}); setTimeout(()=>$("fName").focus({preventScroll:true}),300);
+}
+$("backBtn").onclick = () => { show("stepPick"); };
+$("againBtn").onclick = () => { S.date=null; S.hour=null; $("stepForm").reset(); show("stepPick"); renderAll(); };
+
+function err(msg){ $("formErr").textContent=msg; $("formErr").hidden=false; }
+$("stepForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const name=$("fName").value.trim(), email=$("fEmail").value.trim(), phone=$("fPhone").value.trim();
+  if (!name) return err("Please enter the patient's full name.");
+  if (!/^\S+@\S+\.\S+$/.test(email)) return err("Please enter a valid email address so we can confirm your appointment.");
+  if (phone.replace(/\D/g,"").length<7) return err("Please enter a mobile number we can reach you on.");
+  if (!$("fConsent").checked) return err("Please tick the consent box to continue.");
+  const x = describe();
+  const booking = { id: Math.random().toString(36).slice(2,10), slot: slotId(S.date,S.hour), date:S.date, hour:S.hour, mode:S.mode, type:S.type, name, email, phone, age:$("fAge").value||"", reason:$("fReason").value.trim(), createdAt:new Date().toISOString(), status:"booked" };
+  const btn=$("submitBtn"); btn.disabled=true; btn.firstChild.textContent="Booking… ";
+  let result = "request";
+  try {
+    if (S.db && S.uid){
+      const slotRef = S.db.doc("slots/"+booking.slot);
+      const snap = await slotRef.get();
+      if (snap.exists){ S.taken.add(booking.slot); renderAll(); show("stepPick"); toast("That time was just taken. Please choose another."); return; }
+      await slotRef.set({ mode:booking.mode, by:S.uid, at:Date.now() });
+      const myRef = S.db.doc("requests/"+S.uid);
+      const mine = await myRef.get();
+      const list = (mine.exists && Array.isArray(mine.data().bookings)) ? mine.data().bookings.slice() : [];
+      list.push(booking);
+      await myRef.set({ bookings:list, updatedAt:Date.now() });
+      result = "saved";
+    } else if (CONFIG.bookingEndpoint){
+      const r = await fetch(CONFIG.bookingEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...booking, dateLabel:x.dateLabel, timeLabel:x.time, timeZone:CONFIG.timeZone})});
+      if (r.ok) result = "sent";
+    }
+  } catch(ex){ result = "request"; }
+  finally { btn.disabled=false; btn.firstChild.textContent="Confirm booking "; }
+  finish(result, booking, x);
+});
+
+function finish(result, b, x){
+  const text = `Appointment request for ${CONFIG.doctor}\n${x.typeLabel}\n${x.modeLabel}\n${x.dateLabel}, ${x.time} (${CONFIG.tzLabel})\n\nPatient: ${b.name}${b.age?` (age ${b.age})`:""}\nEmail: ${b.email}\nMobile: ${b.phone}${b.reason?`\nNote: ${b.reason}`:""}`;
+  $("doneSummary").textContent = text;
+  const acts = $("doneActions"); acts.innerHTML="";
+  if (result==="saved" || result==="sent"){
+    $("doneTitle").textContent = "Appointment booked";
+    $("doneText").textContent = b.mode==="online" ? "Your time is reserved. The clinic will email your secure video link before the session." : "Your time is reserved. The clinic will contact you to confirm. Please arrive 10 minutes early.";
+  } else {
+    $("doneTitle").textContent = "Almost done: send your request";
+    $("doneText").textContent = `Copy the details below and send them to the clinic by email or message at ${CONFIG.email} or ${CONFIG.phone}. Your time is confirmed once the clinic replies.`;
+    const c = document.createElement("button"); c.type="button"; c.className="btn btn-gold"; c.textContent="Copy request details";
+    c.onclick = () => copyText(text, "Request details copied");
+    acts.append(c);
+  }
+  show("stepDone"); $("stepForm").reset();
+}
+
+/* ===== Lists (patient's own + clinic view) ===== */
+const esc = s => String(s??"").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function apptRow(b, owner){
+  const [y,m,d]=b.date.split("-").map(Number);
+  const dd = new Date(Date.UTC(y,m-1,d));
+  return `<div class="appt"><div class="when">${d}<small>${dd.toLocaleDateString("en-GB",{month:"short",timeZone:"UTC"})} · ${fmtHour(b.hour).replace(":00","")}</small></div>
+  <div class="who"><b>${esc(b.name)}</b><br><span class="pill ${b.mode==="inPerson"?"f2f":""}">${b.mode==="online"?"Online":"Face-to-face"}</span><span class="pill" style="background:var(--t-lav)">${b.type==="initial"?"First visit":"Follow-up"}</span>${owner?`<br>${esc(b.email)} · ${esc(b.phone)}${b.age?` · age ${esc(b.age)}`:""}${b.reason?`<br><span style="color:var(--muted)">${esc(b.reason)}</span>`:""}`:""}</div>
+  <button type="button" class="link-btn" data-cancel="${esc(b.id)}" data-owner="${esc(owner||"")}">Cancel</button></div>`;
+}
+const upcoming = b => clinicToUTC(...b.date.split("-").map(Number), b.hour) > Date.now()-36e5;
+function renderMine(){
+  const list = S.myBookings.filter(upcoming).sort((a,b)=>a.slot<b.slot?-1:1);
+  $("myPanel").hidden = !list.length || S.admin;
+  $("myList").innerHTML = list.map(b=>apptRow(b,null)).join("");
+}
+let adminRows = [];
+function renderAdmin(){
+  const list = adminRows.filter(r=>upcoming(r.b)).sort((a,b)=>a.b.slot<b.b.slot?-1:1);
+  $("adminList").innerHTML = list.length ? list.map(r=>apptRow(r.b, r.uid)).join("") : `<div class="empty">No upcoming appointments yet. New bookings appear here as soon as they are made.</div>`;
+}
+async function cancelBooking(id, ownerUid){
+  const uid = ownerUid || S.uid; if(!S.db||!uid) return;
+  try{
+    const ref = S.db.doc("requests/"+uid); const snap = await ref.get(); if(!snap.exists) return;
+    const list = (snap.data().bookings||[]); const b = list.find(x=>x.id===id); if(!b) return;
+    await ref.set({ bookings:list.filter(x=>x.id!==id), updatedAt:Date.now() });
+    await S.db.doc("slots/"+b.slot).delete().catch(()=>{});
+    toast("Appointment cancelled");
+  }catch(e){ toast("Could not cancel. Please contact the clinic."); }
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-cancel]"); if(!b) return;
+  if (b.dataset.armed){ cancelBooking(b.dataset.cancel, b.dataset.owner); }
+  else { b.dataset.armed="1"; b.textContent="Tap again to cancel"; setTimeout(()=>{ if(b.isConnected){ delete b.dataset.armed; b.textContent="Cancel"; } },4000); }
+});
+
+/* ===== Misc UI ===== */
+function toast(t){ const el=$("toast"); el.textContent=t; el.hidden=false; clearTimeout(toast._t); toast._t=setTimeout(()=>el.hidden=true,3200); }
+async function copyText(t, ok){ try{ await navigator.clipboard.writeText(t); toast(ok||"Copied"); } catch(e){ const r=document.createRange(); const n=$("doneSummary"); r.selectNodeContents(n); const s=getSelection(); s.removeAllRanges(); s.addRange(r); toast("Selected. Press copy on your device."); } }
+$("contactList").innerHTML = `
+  <li><span class="copy-row">${esc(CONFIG.phone)} <button class="copy-btn" type="button" data-copy="${esc(CONFIG.phone)}">Copy</button></span></li>
+  <li><span class="copy-row">${esc(CONFIG.email)} <button class="copy-btn" type="button" data-copy="${esc(CONFIG.email)}">Copy</button></span></li>
+  <li>${esc(CONFIG.address)}</li><li style="opacity:.8">${esc(CONFIG.hoursText)}</li>`;
+document.addEventListener("click", e => { const c=e.target.closest("[data-copy]"); if(c){ navigator.clipboard?.writeText(c.dataset.copy).then(()=>toast("Copied"),()=>toast(c.dataset.copy)); } });
+$("yr").textContent = nowP.y;
+$("tzNote").textContent = sameTZ() ? `Times are shown in ${CONFIG.tzLabel}.` : `Times are shown in ${CONFIG.tzLabel}, with your local time underneath.`;
+$("menuBtn").onclick = () => { const o=$("navList").classList.toggle("open"); $("menuBtn").setAttribute("aria-expanded",o); };
+$("navList").addEventListener("click", e => { if(e.target.closest("a")){ $("navList").classList.remove("open"); $("menuBtn").setAttribute("aria-expanded","false"); } });
+const secs = ["home","book","services","about","consultations","faq","contact"];
+const io = "IntersectionObserver" in window ? new IntersectionObserver(es=>es.forEach(en=>{ if(en.isIntersecting){ document.querySelectorAll("#navList a").forEach(a=>a.classList.toggle("on", a.getAttribute("href")==="#"+en.target.id)); } }),{rootMargin:"-45% 0px -50% 0px"}) : null;
+if (io) secs.forEach(s=>{ const el=$(s); if(el) io.observe(el); });
+
+renderAll();
+
+/* ===== Live data (when opened on claude.ai) ===== */
+(async () => {
+  if (!window.claude?.use) return;
+  try {
+    const [db, user] = await Promise.all([claude.use("db"), claude.use("user")]);
+    S.db = db; S.user = user;
+    if (!db) return;
+    db.collection("slots").onSnapshot(snap => { S.taken = new Set(snap.docs.map(d=>d.id)); renderAll(); }, ()=>{});
+    if (user){
+      S.uid = await user.id().catch(()=>null);
+      S.admin = await user.canEdit().catch(()=>false);
+    }
+    if (S.uid){
+      db.doc("requests/"+S.uid).onSnapshot(s => { S.myBookings = s.exists ? (s.data().bookings||[]) : []; renderMine(); }, ()=>{});
+    }
+    if (S.admin){
+      $("adminPanel").hidden = false; renderAdmin();
+      db.collection("requests").onSnapshot(snap => {
+        adminRows = []; snap.docs.forEach(d => (d.data().bookings||[]).forEach(b => adminRows.push({uid:d.id, b})));
+        renderAdmin(); renderMine();
+      }, ()=>{});
+    }
+  } catch(e){ /* page keeps working in request mode */ }
+})();
+</script>
+
+</body>
+</html>
