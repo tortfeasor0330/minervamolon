@@ -150,6 +150,29 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;backgroun
 @media (max-width:900px){.about-grid{grid-template-columns:1fr}}
 @media (max-width:560px){.about-visual{grid-template-columns:1fr}.feature-card{width:auto}}
 
+/* Credentials + clinic */
+.creds{padding-block:8px 40px;display:grid;gap:22px}
+.creds-head h3,.clinic h3{font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;margin-top:6px}
+.cred-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.cred{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:20px;display:grid;gap:10px;align-content:start}
+.cred svg{width:34px;height:34px;color:var(--gold)}
+.cred h4{margin:0;font-family:var(--display);font-size:1.1rem;font-weight:700}
+.cred ul{margin:0;padding-left:1.05em;display:grid;gap:6px;font-size:.9rem;opacity:.88}
+.cred li::marker{color:var(--gold)}
+.clinic{display:grid;grid-template-columns:.8fr 1.6fr;gap:36px;align-items:center;padding-block:24px clamp(36px,5vw,64px)}
+.clinic-copy{display:grid;gap:14px;min-width:0}
+.clinic-copy p{opacity:.88;max-width:46ch}
+.clinic-addr{font-weight:700;color:var(--gold);opacity:1!important}
+.clinic-addr:empty{display:none}
+.gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;min-width:0}
+.gallery figure{margin:0;position:relative;border-radius:22px;overflow:hidden;aspect-ratio:3/4;max-width:100%;box-shadow:0 24px 40px -24px rgba(0,0,0,.6)}
+.gallery figure:first-child{grid-row:span 1}
+.gallery img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.gallery figure:hover img{transform:scale(1.04)}
+.gallery figcaption{position:absolute;left:12px;bottom:12px;background:var(--paper);color:var(--ink);font-size:.78rem;font-weight:700;border-radius:999px;padding:4px 12px}
+@media (max-width:1000px){.cred-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.clinic{grid-template-columns:1fr}}
+@media (max-width:560px){.cred-grid{grid-template-columns:1fr}.gallery{grid-template-columns:1fr 1fr}.gallery figure:first-child{grid-column:span 2;aspect-ratio:4/3}}
+
 /* Consultation modes */
 .modes{padding-block:clamp(40px,6vw,72px) 8px}
 .modes-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:20px;margin-bottom:28px}
@@ -308,6 +331,10 @@ footer.foot{padding-block:48px 24px}
     <symbol id="i-ear" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M7 9a5 5 0 1 1 10 0c0 3-3 4-3 7a3 3 0 0 1-5.5 1.6M10 9a2 2 0 1 1 4 0"/></symbol>
     <symbol id="i-lifebuoy" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="m6 6 3.5 3.5m5 5L18 18m0-12-3.5 3.5m-5 5L6 18"/></symbol>
     <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M12 7.5V12l3 2"/></symbol>
+    <symbol id="i-cap" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M2.5 9 12 4.5 21.5 9 12 13.5 2.5 9Z"/><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M6.5 11v4.5c0 1.5 2.5 3 5.5 3s5.5-1.5 5.5-3V11M21.5 9v5"/></symbol>
+    <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="9" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="m8.5 13.5-1.5 7 5-2.5 5 2.5-1.5-7"/></symbol>
+    <symbol id="i-gov" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" d="M3 9.5 12 4l9 5.5H3ZM5 10v7m4.7-7v7m4.6-7v7M19 10v7M3 20h18"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5Zm0 0v13"/></symbol>
   </defs>
 </svg>
 
@@ -467,8 +494,9 @@ footer.foot{padding-block:48px 24px}
     <div class="about-copy">
       <p class="eyebrow">Meet Dr. Minerva Molon</p>
       <h2 class="h2">More Than<br><span class="gold">A Diagnosis</span></h2>
-      <p>Dr. Minerva Molon is a psychiatrist who believes good mental health care starts with time and attention. She sees each patient as a whole person, with a history, a family and goals of their own.</p>
-      <p>Her approach combines careful assessment, clear explanations and, when it helps, medication and therapy working together. Patients leave each visit knowing the plan and why it was chosen.</p>
+      <p>Dr. Minerva Molon is a Diplomate and Fellow of the Philippine Psychiatric Association. She earned her medical degree at the UERM College of Medicine and completed her psychiatry residency at the National Center for Mental Health, the country's leading psychiatric hospital.</p>
+      <p>Her career reaches beyond the consultation room. She holds a Master in Public Health and served as Regional Director of the Department of Health for Eastern Visayas (Region VIII) before retiring. Leading health services for a whole region taught her to see the full picture: a patient's symptoms, but also their family, work and community.</p>
+      <p>Today she is a Visiting Consultant at the Department of Psychiatry of Eastern Visayas Medical Center and teaches future doctors and physical therapists at RTR Educational Foundation. In her own clinic she gives every patient unhurried time, a clear explanation of what is happening, and a treatment plan made together.</p>
       <div><a class="btn btn-gold" href="#book">Book with Dr. Minerva <svg><use href="#i-arrow"/></svg></a></div>
     </div>
     <div class="about-visual">
@@ -483,6 +511,46 @@ footer.foot{padding-block:48px 24px}
         <div><svg><use href="#i-leaf"/></svg>Evidence-based treatment</div>
         <div><svg><use href="#i-shield"/></svg>Strictly confidential</div>
       </div>
+    </div>
+  </div>
+
+  <div class="wrap creds">
+    <div class="creds-head"><p class="eyebrow">Credentials &amp; experience</p><h3>Trained, certified and trusted</h3></div>
+    <div class="cred-grid">
+      <article class="cred">
+        <svg><use href="#i-cap"/></svg>
+        <h4>Education &amp; training</h4>
+        <ul><li>Doctor of Medicine, UERM College of Medicine</li><li>Psychiatry Residency, National Center for Mental Health</li><li>Master in Public Health</li></ul>
+      </article>
+      <article class="cred">
+        <svg><use href="#i-award"/></svg>
+        <h4>Certification &amp; memberships</h4>
+        <ul><li>Diplomate &amp; Fellow, Philippine Psychiatric Association</li><li>Life Member, Philippine Psychiatric Association</li><li>Life Member, Philippine Medical Association</li></ul>
+      </article>
+      <article class="cred">
+        <svg><use href="#i-gov"/></svg>
+        <h4>Public health leadership</h4>
+        <ul><li>Retired Regional Director, Department of Health Region VIII (Eastern Visayas)</li></ul>
+      </article>
+      <article class="cred">
+        <svg><use href="#i-book"/></svg>
+        <h4>Hospital &amp; teaching</h4>
+        <ul><li>Visiting Consultant, Department of Psychiatry, Eastern Visayas Medical Center</li><li>Part-time Instructor, College of Medicine and College of Physical Therapy, RTR Educational Foundation, Inc.</li></ul>
+      </article>
+    </div>
+  </div>
+
+  <div class="wrap clinic" id="clinic">
+    <div class="clinic-copy">
+      <p class="eyebrow">The clinic</p>
+      <h3>A Quiet Place to Talk</h3>
+      <p>Face-to-face consultations take place in a bright, garden-facing room filled with plants and natural light. Comfortable wooden chairs and a small table replace the usual hospital desk, so it feels more like a sitting room than an office. Many patients find it easier to open up here.</p>
+      <p class="clinic-addr" id="clinicAddr"></p>
+    </div>
+    <div class="gallery">
+      <figure><img src="/images/clinic-1.webp" alt="Consultation table and wooden chairs in front of a large window looking onto the garden" loading="lazy" width="900" height="1200"><figcaption>Garden view</figcaption></figure>
+      <figure><img src="/images/clinic-2.webp" alt="Consultation room with wooden chairs, framed pictures and a portrait banner of Dr. Molon" loading="lazy" width="900" height="1200"><figcaption>Consultation room</figcaption></figure>
+      <figure><img src="/images/clinic-3.webp" alt="Clinic seating area with a portrait banner of Dr. Molon" loading="lazy" width="788" height="1400"><figcaption>A welcoming space</figcaption></figure>
     </div>
   </div>
   <svg class="wave" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true" style="margin-bottom:-1px"><path d="M0 50c300-40 560-40 820-10s420 30 620-10v50H0Z" fill="var(--cream)"/></svg>
@@ -803,6 +871,7 @@ $("contactList").innerHTML = `
   <li>${esc(CONFIG.address)}</li><li style="opacity:.8">${esc(CONFIG.hoursText)}</li>`;
 document.addEventListener("click", e => { const c=e.target.closest("[data-copy]"); if(c){ navigator.clipboard?.writeText(c.dataset.copy).then(()=>toast("Copied"),()=>toast(c.dataset.copy)); } });
 $("yr").textContent = nowP.y;
+if (!/to be added/i.test(CONFIG.address)) $("clinicAddr").textContent = CONFIG.address;
 $("tzNote").textContent = sameTZ() ? `Times are shown in ${CONFIG.tzLabel}.` : `Times are shown in ${CONFIG.tzLabel}, with your local time underneath.`;
 $("menuBtn").onclick = () => { const o=$("navList").classList.toggle("open"); $("menuBtn").setAttribute("aria-expanded",o); };
 $("navList").addEventListener("click", e => { if(e.target.closest("a")){ $("navList").classList.remove("open"); $("menuBtn").setAttribute("aria-expanded","false"); } });
