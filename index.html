@@ -16,7 +16,7 @@
 <style>
 /* Layout: template rhythm, dark forest bands alternating with cream bands joined by soft waves; gold for action. */
 :root{
-  --forest:#537a61; --forest-2:#466953; --gold-soft:#ffd98e; --forest-ink:#e9f1ea;
+  --forest:#1f6b4a; --forest-2:#195a3e; --gold-soft:#ffd98e; --forest-ink:#e9f1ea;
   --gold:#f2b33d; --gold-ink:#2a1d04;
   --cream:#fbf5ea; --paper:#ffffff; --ink:#1d2a24; --muted:#5f6d66; --line:#e6dccb;
   --t-peach:#fde3cf; --t-mint:#d9eedd; --t-sand:#f8e6c4; --t-rose:#f6dbe0; --t-lav:#e7ddf3; --t-sky:#d8e8f2;
@@ -27,12 +27,12 @@
   --wrap:1180px; --r:18px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --forest:#3f5f4b; --forest-2:#34503f; --forest-ink:#e9f1ea;
+  --forest:#17573c; --forest-2:#124a32; --forest-ink:#e9f1ea;
   --cream:#101b17; --paper:#17251f; --ink:#e8efe9; --muted:#a3b3aa; --line:#2a3b33;
   --t-peach:#3a2a20; --t-mint:#1e3428; --t-sand:#3a3020; --t-rose:#3a2329; --t-lav:#2d2539; --t-sky:#1f2f3a;
   --ok:#6fcf97; --err:#ff8a80; color-scheme:dark }}
 :root[data-theme="dark"]{
-  --forest:#3f5f4b; --forest-2:#34503f; --forest-ink:#e9f1ea;
+  --forest:#17573c; --forest-2:#124a32; --forest-ink:#e9f1ea;
   --cream:#101b17; --paper:#17251f; --ink:#e8efe9; --muted:#a3b3aa; --line:#2a3b33;
   --t-peach:#3a2a20; --t-mint:#1e3428; --t-sand:#3a3020; --t-rose:#3a2329; --t-lav:#2d2539; --t-sky:#1f2f3a;
   --ok:#6fcf97; --err:#ff8a80; color-scheme:dark }
@@ -95,7 +95,7 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;backgroun
 .trust div{display:flex;align-items:center;gap:10px;font-size:.85rem;line-height:1.25}
 .trust svg{width:30px;height:30px;flex:none;color:var(--forest-ink);opacity:.9}
 .portrait{position:relative;display:flex;justify-content:center;align-items:center;padding-block:28px clamp(40px,6vw,72px)}
-.frame{position:relative;width:min(470px,100%);aspect-ratio:1;max-width:100%;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 50% 38%,#7fa58b 0%,var(--forest-2) 72%);box-shadow:0 0 0 8px rgba(242,179,61,.18),0 30px 60px -20px rgba(0,0,0,.55);isolation:isolate}
+.frame{position:relative;width:min(470px,100%);aspect-ratio:1;max-width:100%;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 50% 38%,#3f8c66 0%,var(--forest-2) 72%);box-shadow:0 0 0 8px rgba(242,179,61,.18),0 30px 60px -20px rgba(0,0,0,.55);isolation:isolate}
 .frame::before{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 30%,rgba(242,179,61,.38),transparent 60%);z-index:-1}
 .frame img{position:absolute;left:50%;top:10%;width:80%;height:auto;max-width:none;transform:translateX(-54%) scaleX(-1);filter:drop-shadow(0 18px 24px rgba(0,0,0,.35))}
 .portrait .ring{position:absolute;left:50%;top:50%;width:min(530px,112%);aspect-ratio:1;transform:translate(-50%,-50%);margin-top:-6px;border-radius:50%;border:2px dashed rgba(242,179,61,.5);pointer-events:none}
