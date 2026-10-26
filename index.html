@@ -264,6 +264,27 @@ label.f input:focus,label.f textarea:focus,label.f select:focus{outline:none;bor
 @media (max-width:1000px){.book-grid{grid-template-columns:1fr}.book-side{position:static}}
 @media (max-width:640px){.cal-wrap{grid-template-columns:1fr}.row2{grid-template-columns:1fr}.appt{grid-template-columns:auto 1fr}.appt .link-btn{grid-column:2}}
 
+/* Payment */
+.pay{border:1.5px solid var(--line);border-radius:18px;padding:18px;display:grid;gap:14px;background:color-mix(in srgb,var(--gold) 6%,transparent)}
+.pay-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 16px;align-items:baseline}
+.pay-head b{font-family:var(--display);font-size:1.15rem}
+.fee{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.bank{background:var(--forest);color:var(--forest-ink);border-radius:14px;padding:16px 18px;display:grid;gap:10px}
+.bank .row{display:grid;grid-template-columns:120px 1fr auto;gap:10px;align-items:center;font-size:.9rem}
+.bank .row span{opacity:.75}
+.bank .row strong{font-weight:700;overflow-wrap:anywhere}
+.bank .acct{font-family:var(--display);font-size:1.35rem;letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.bank .copy-btn{white-space:nowrap}
+.pay-steps{margin:0;padding-left:1.2em;display:grid;gap:4px;font-size:.88rem;color:var(--muted)}
+.drop{border:1.5px dashed var(--line);border-radius:14px;padding:14px;display:flex;gap:14px;align-items:center;cursor:pointer;background:var(--paper)}
+.drop:hover,.drop.has{border-color:var(--gold)}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+.drop .thumb{width:56px;height:56px;border-radius:10px;background:var(--cream);display:grid;place-items:center;flex:none;overflow:hidden;font-size:.7rem;font-weight:700;color:var(--muted)}
+.drop .thumb img{width:100%;height:100%;object-fit:cover}
+.drop b{display:block;font-size:.92rem}
+.drop small{color:var(--muted);font-size:.8rem}
+@media (max-width:520px){.bank .row{grid-template-columns:1fr auto}.bank .row span{grid-column:1/-1}}
+
 /* FAQ */
 .faq{padding-block:clamp(40px,6vw,72px)}
 .faq-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:40px;align-items:start}
@@ -396,6 +417,7 @@ footer.foot{padding-block:48px 24px}
         <li><div><b>Choose how to meet</b><span>Face-to-face or online.</span></div></li>
         <li><div><b>Pick a date and time</b><span>Green dots show days with open slots.</span></div></li>
         <li><div><b>Tell us about you</b><span>Just your contact details and, if you like, a short note.</span></div></li>
+        <li><div><b>Pay and upload your receipt</b><span>Deposit the fee to Dr. Molon's Landbank account and attach the receipt.</span></div></li>
       </ol>
       <p class="note-small" id="tzNote">Times are shown in clinic time.</p>
     </aside>
@@ -439,11 +461,31 @@ footer.foot{padding-block:48px 24px}
             <label class="f" for="fAge">Patient's age<input id="fAge" type="number" min="1" max="120" inputmode="numeric"></label>
           </div>
           <label class="f" for="fReason">What would you like help with? <span style="font-weight:400;color:var(--muted)">(optional)</span><textarea id="fReason" maxlength="600" placeholder="A sentence or two is enough. You can share more during the consultation."></textarea></label>
+          <div class="pay" id="payBox">
+            <div class="pay-head"><b>Pay your consultation fee</b><span class="fee" id="feeLine"></span></div>
+            <div class="bank">
+              <div class="row"><span>Bank</span><strong id="bkBank"></strong><span></span></div>
+              <div class="row"><span>Account name</span><strong id="bkName"></strong><button type="button" class="copy-btn" id="cpName">Copy</button></div>
+              <div class="row"><span id="bkType">Account number</span><strong class="acct" id="bkNo"></strong><button type="button" class="copy-btn" id="cpNo">Copy</button></div>
+            </div>
+            <ol class="pay-steps">
+              <li>Send the fee by bank transfer (InstaPay or PESONet from any bank or e-wallet) or deposit it at any Landbank branch.</li>
+              <li>Take a screenshot or photo of the receipt or transfer confirmation.</li>
+              <li>Upload it below. Your appointment is confirmed once the clinic verifies the payment.</li>
+            </ol>
+            <label class="drop" for="fReceipt" id="dropBox">
+              <input type="file" id="fReceipt" accept="image/*,application/pdf">
+              <span class="thumb" id="rcThumb">JPG<br>PNG<br>PDF</span>
+              <span><b id="rcName">Upload proof of payment</b><small id="rcHint">Photo, screenshot or PDF, up to 8 MB</small></span>
+            </label>
+            <label class="f" for="fRef">Reference / transaction number <span style="font-weight:400;color:var(--muted)">(optional)</span><input id="fRef" maxlength="60" autocomplete="off"></label>
+          </div>
+          <input type="text" id="fWebsite" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
           <label class="check" for="fConsent"><input type="checkbox" id="fConsent" required><span>I agree that my details may be used to arrange this appointment and will be kept confidential.</span></label>
           <div class="msg err" id="formErr" hidden></div>
           <div class="form-actions">
             <button type="button" class="btn btn-ghost" id="backBtn"><svg style="transform:scaleX(-1)"><use href="#i-arrow"/></svg>Change time</button>
-            <button type="submit" class="btn btn-gold" id="submitBtn">Confirm booking <svg><use href="#i-check"/></svg></button>
+            <button type="submit" class="btn btn-gold" id="submitBtn">Submit booking <svg><use href="#i-check"/></svg></button>
           </div>
         </form>
 
@@ -663,7 +705,11 @@ const CONFIG = {
   closedDates: [],                    // e.g. "2026-12-25"
   // When this site is hosted on its own domain, set a webhook URL (e.g. a GoHighLevel or Zapier webhook)
   // and every booking is POSTed there as JSON.
-  bookingEndpoint: ""
+  bookingEndpoint: "/api/book",
+  // Payment details shown in the booking form
+  bank: { bank: "Landbank of the Philippines", accountName: "Minerva P. Molon", accountType: "Savings Account", accountNumber: "1736 4865 78" },
+  // Consultation fees in pesos. Leave a value empty to hide it.
+  fees: { initial: "", followup: "" }
 };
 
 /* ===== Time helpers (clinic time zone) ===== */
@@ -758,7 +804,7 @@ function setMode(mode){
   S.hour=null; renderAll();
 }
 $("modeF2F").onclick=()=>setMode("inPerson"); $("modeOnl").onclick=()=>setMode("online");
-function setType(t){ S.type=t; $("typeInitial").setAttribute("aria-pressed",t==="initial"); $("typeFollow").setAttribute("aria-pressed",t==="followup"); }
+function setType(t){ S.type=t; $("typeInitial").setAttribute("aria-pressed",t==="initial"); $("typeFollow").setAttribute("aria-pressed",t==="followup"); if (window.renderFee) renderFee(); }
 $("typeInitial").onclick=()=>setType("initial"); $("typeFollow").onclick=()=>setType("followup");
 
 /* ===== Form ===== */
@@ -783,10 +829,12 @@ $("stepForm").addEventListener("submit", async e => {
   if (!name) return err("Please enter the patient's full name.");
   if (!/^\S+@\S+\.\S+$/.test(email)) return err("Please enter a valid email address so we can confirm your appointment.");
   if (phone.replace(/\D/g,"").length<7) return err("Please enter a mobile number we can reach you on.");
+  if (!RC.data) return err("Please upload your proof of payment (receipt or transfer screenshot).");
   if (!$("fConsent").checked) return err("Please tick the consent box to continue.");
+  if ($("fWebsite").value) return;
   const x = describe();
-  const booking = { id: Math.random().toString(36).slice(2,10), slot: slotId(S.date,S.hour), date:S.date, hour:S.hour, mode:S.mode, type:S.type, name, email, phone, age:$("fAge").value||"", reason:$("fReason").value.trim(), createdAt:new Date().toISOString(), status:"booked" };
-  const btn=$("submitBtn"); btn.disabled=true; btn.firstChild.textContent="Booking… ";
+  const booking = { id: Math.random().toString(36).slice(2,10), slot: slotId(S.date,S.hour), date:S.date, hour:S.hour, mode:S.mode, type:S.type, name, email, phone, age:$("fAge").value||"", reason:$("fReason").value.trim(), paymentRef:$("fRef").value.trim(), receiptName:RC.name, fee:feeFor(S.type), createdAt:new Date().toISOString(), status:"pending payment check" };
+  const btn=$("submitBtn"); btn.disabled=true; btn.firstChild.textContent="Sending… ";
   let result = "request";
   try {
     if (S.db && S.uid){
@@ -801,30 +849,63 @@ $("stepForm").addEventListener("submit", async e => {
       await myRef.set({ bookings:list, updatedAt:Date.now() });
       result = "saved";
     } else if (CONFIG.bookingEndpoint){
-      const r = await fetch(CONFIG.bookingEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...booking, dateLabel:x.dateLabel, timeLabel:x.time, timeZone:CONFIG.timeZone})});
+      const r = await fetch(CONFIG.bookingEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...booking, dateLabel:x.dateLabel, timeLabel:x.time, modeLabel:x.modeLabel, typeLabel:x.typeLabel, tzLabel:CONFIG.tzLabel, receipt:{name:RC.name, type:RC.type, data:RC.data}})});
       if (r.ok) result = "sent";
     }
   } catch(ex){ result = "request"; }
-  finally { btn.disabled=false; btn.firstChild.textContent="Confirm booking "; }
+  finally { btn.disabled=false; btn.firstChild.textContent="Submit booking "; }
   finish(result, booking, x);
 });
 
 function finish(result, b, x){
-  const text = `Appointment request for ${CONFIG.doctor}\n${x.typeLabel}\n${x.modeLabel}\n${x.dateLabel}, ${x.time} (${CONFIG.tzLabel})\n\nPatient: ${b.name}${b.age?` (age ${b.age})`:""}\nEmail: ${b.email}\nMobile: ${b.phone}${b.reason?`\nNote: ${b.reason}`:""}`;
+  const text = `Appointment request for ${CONFIG.doctor}\n${x.typeLabel}\n${x.modeLabel}\n${x.dateLabel}, ${x.time} (${CONFIG.tzLabel})\n\nPatient: ${b.name}${b.age?` (age ${b.age})`:""}\nEmail: ${b.email}\nMobile: ${b.phone}${b.reason?`\nNote: ${b.reason}`:""}${b.fee?`\nFee: ${b.fee}`:""}\nPayment ref: ${b.paymentRef||"(see attached receipt)"}`;
   $("doneSummary").textContent = text;
   const acts = $("doneActions"); acts.innerHTML="";
   if (result==="saved" || result==="sent"){
-    $("doneTitle").textContent = "Appointment booked";
-    $("doneText").textContent = b.mode==="online" ? "Your time is reserved. The clinic will email your secure video link before the session." : "Your time is reserved. The clinic will contact you to confirm. Please arrive 10 minutes early.";
+    $("doneTitle").textContent = "Booking received";
+    $("doneText").textContent = "Thank you. The clinic has your booking and receipt and will confirm your appointment once the payment is verified." + (b.mode==="online" ? " Your secure video link will be emailed before the session." : " Please arrive 10 minutes early.");
   } else {
     $("doneTitle").textContent = "Almost done: send your request";
-    $("doneText").textContent = `Copy the details below and send them to the clinic by email or message at ${CONFIG.email} or ${CONFIG.phone}. Your time is confirmed once the clinic replies.`;
+    $("doneText").textContent = `Copy the details below and send them, with your payment receipt, to the clinic at ${CONFIG.email} or ${CONFIG.phone}. Your appointment is confirmed once the clinic verifies your payment.`;
     const c = document.createElement("button"); c.type="button"; c.className="btn btn-gold"; c.textContent="Copy request details";
     c.onclick = () => copyText(text, "Request details copied");
     acts.append(c);
   }
-  show("stepDone"); $("stepForm").reset();
+  show("stepDone"); $("stepForm").reset(); clearReceipt();
 }
+
+/* ===== Payment + receipt ===== */
+const RC = { name:"", type:"", data:"" };
+const peso = v => v ? (/^[0-9.,\s]+$/.test(v) ? "₱" + v.trim() : v) : "";
+const feeFor = t => peso(t==="initial" ? CONFIG.fees.initial : CONFIG.fees.followup);
+function renderFee(){ const f=feeFor(S.type); $("feeLine").textContent = f ? `${S.type==="initial"?"First consultation":"Follow-up"}: ${f}` : "The clinic will confirm the amount"; }
+$("bkBank").textContent = CONFIG.bank.bank; $("bkName").textContent = CONFIG.bank.accountName;
+$("bkType").textContent = CONFIG.bank.accountType || "Account number"; $("bkNo").textContent = CONFIG.bank.accountNumber;
+$("cpNo").onclick = () => navigator.clipboard?.writeText(CONFIG.bank.accountNumber.replace(/\s/g,"")).then(()=>toast("Account number copied"),()=>toast(CONFIG.bank.accountNumber));
+$("cpName").onclick = () => navigator.clipboard?.writeText(CONFIG.bank.accountName).then(()=>toast("Account name copied"),()=>toast(CONFIG.bank.accountName));
+function clearReceipt(){ RC.name=RC.type=RC.data=""; $("rcThumb").innerHTML="JPG<br>PNG<br>PDF"; $("rcName").textContent="Upload proof of payment"; $("rcHint").textContent="Photo, screenshot or PDF, up to 8 MB"; $("dropBox").classList.remove("has"); }
+function shrinkImage(file){
+  return new Promise((ok,bad)=>{ const url=URL.createObjectURL(file); const img=new Image();
+    img.onload=()=>{ const max=1600, k=Math.min(1,max/Math.max(img.width,img.height)); const c=document.createElement("canvas"); c.width=Math.round(img.width*k); c.height=Math.round(img.height*k);
+      c.getContext("2d").drawImage(img,0,0,c.width,c.height); URL.revokeObjectURL(url); ok(c.toDataURL("image/jpeg",0.82)); };
+    img.onerror=()=>{ URL.revokeObjectURL(url); bad(new Error("unreadable")); }; img.src=url; });
+}
+$("fReceipt").addEventListener("change", async e => {
+  const f = e.target.files && e.target.files[0]; if(!f) return;
+  $("formErr").hidden = true;
+  try{
+    if (f.size > 8*1024*1024) throw new Error("That file is larger than 8 MB. Please upload a smaller photo or screenshot.");
+    if (f.type==="application/pdf"){
+      if (f.size > 3*1024*1024) throw new Error("PDF receipts must be under 3 MB. A screenshot also works.");
+      RC.data = await new Promise((ok,bad)=>{ const r=new FileReader(); r.onload=()=>ok(r.result); r.onerror=bad; r.readAsDataURL(f); });
+      RC.type="application/pdf"; RC.name=f.name; $("rcThumb").textContent="PDF";
+    } else if (f.type.startsWith("image/")){
+      RC.data = await shrinkImage(f); RC.type="image/jpeg"; RC.name=f.name.replace(/\.[^.]+$/,"")+".jpg";
+      $("rcThumb").innerHTML = `<img alt="" src="${RC.data}">`;
+    } else throw new Error("Please upload an image (JPG, PNG) or a PDF.");
+    $("rcName").textContent = "Receipt attached"; $("rcHint").textContent = f.name + " · tap to change"; $("dropBox").classList.add("has");
+  } catch(ex){ clearReceipt(); e.target.value=""; err(ex.message && ex.message!=="unreadable" ? ex.message : "We could not read that file. Please try a JPG, PNG or PDF."); }
+});
 
 /* ===== Lists (patient's own + clinic view) ===== */
 const esc = s => String(s??"").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -879,7 +960,7 @@ const secs = ["home","book","services","about","consultations","faq","contact"];
 const io = "IntersectionObserver" in window ? new IntersectionObserver(es=>es.forEach(en=>{ if(en.isIntersecting){ document.querySelectorAll("#navList a").forEach(a=>a.classList.toggle("on", a.getAttribute("href")==="#"+en.target.id)); } }),{rootMargin:"-45% 0px -50% 0px"}) : null;
 if (io) secs.forEach(s=>{ const el=$(s); if(el) io.observe(el); });
 
-renderAll();
+renderAll(); renderFee();
 
 /* ===== Live data (when opened on claude.ai) ===== */
 (async () => {
