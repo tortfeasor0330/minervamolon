@@ -417,7 +417,7 @@ footer.foot{padding-block:48px 24px}
         <li><div><b>Choose how to meet</b><span>Face-to-face or online.</span></div></li>
         <li><div><b>Pick a date and time</b><span>Green dots show days with open slots.</span></div></li>
         <li><div><b>Tell us about you</b><span>Just your contact details and, if you like, a short note.</span></div></li>
-        <li><div><b>Pay and upload your receipt</b><span>Deposit the fee to Dr. Molon's Landbank account and attach the receipt.</span></div></li>
+        <li><div><b>Pay and send your receipt</b><span>After you submit, we show Dr. Molon's Landbank details so you can pay and upload the receipt.</span></div></li>
       </ol>
       <p class="note-small" id="tzNote">Times are shown in clinic time.</p>
     </aside>
@@ -461,25 +461,6 @@ footer.foot{padding-block:48px 24px}
             <label class="f" for="fAge">Patient's age<input id="fAge" type="number" min="1" max="120" inputmode="numeric"></label>
           </div>
           <label class="f" for="fReason">What would you like help with? <span style="font-weight:400;color:var(--muted)">(optional)</span><textarea id="fReason" maxlength="600" placeholder="A sentence or two is enough. You can share more during the consultation."></textarea></label>
-          <div class="pay" id="payBox">
-            <div class="pay-head"><b>Pay your consultation fee</b><span class="fee" id="feeLine"></span></div>
-            <div class="bank">
-              <div class="row"><span>Bank</span><strong id="bkBank"></strong><span></span></div>
-              <div class="row"><span>Account name</span><strong id="bkName"></strong><button type="button" class="copy-btn" id="cpName">Copy</button></div>
-              <div class="row"><span id="bkType">Account number</span><strong class="acct" id="bkNo"></strong><button type="button" class="copy-btn" id="cpNo">Copy</button></div>
-            </div>
-            <ol class="pay-steps">
-              <li>Send the fee by bank transfer (InstaPay or PESONet from any bank or e-wallet) or deposit it at any Landbank branch.</li>
-              <li>Take a screenshot or photo of the receipt or transfer confirmation.</li>
-              <li>Upload it below. Your appointment is confirmed once the clinic verifies the payment.</li>
-            </ol>
-            <label class="drop" for="fReceipt" id="dropBox">
-              <input type="file" id="fReceipt" accept="image/*,application/pdf">
-              <span class="thumb" id="rcThumb">JPG<br>PNG<br>PDF</span>
-              <span><b id="rcName">Upload proof of payment</b><small id="rcHint">Photo, screenshot or PDF, up to 8 MB</small></span>
-            </label>
-            <label class="f" for="fRef">Reference / transaction number <span style="font-weight:400;color:var(--muted)">(optional)</span><input id="fRef" maxlength="60" autocomplete="off"></label>
-          </div>
           <input type="text" id="fWebsite" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
           <label class="check" for="fConsent"><input type="checkbox" id="fConsent" required><span>I agree that my details may be used to arrange this appointment and will be kept confidential.</span></label>
           <div class="msg err" id="formErr" hidden></div>
@@ -493,6 +474,28 @@ footer.foot{padding-block:48px 24px}
           <div class="tick"><svg><use href="#i-check"/></svg></div>
           <h3 id="doneTitle">Appointment booked</h3>
           <p id="doneText" style="color:var(--muted);max-width:46ch"></p>
+          <div class="pay" id="payBox" style="text-align:left;width:100%;max-width:560px">
+            <div class="pay-head"><b>Pay your consultation fee</b><span class="fee" id="feeLine"></span></div>
+            <div class="bank">
+              <div class="row"><span>Bank</span><strong id="bkBank"></strong><span></span></div>
+              <div class="row"><span>Account name</span><strong id="bkName"></strong><button type="button" class="copy-btn" id="cpName">Copy</button></div>
+              <div class="row"><span id="bkType">Account number</span><strong class="acct" id="bkNo"></strong><button type="button" class="copy-btn" id="cpNo">Copy</button></div>
+            </div>
+            <ol class="pay-steps">
+              <li>Send the fee by bank transfer (InstaPay or PESONet from any bank or e-wallet) or deposit it at any Landbank branch.</li>
+              <li>Take a screenshot or photo of the receipt or transfer confirmation.</li>
+              <li>Upload it below and tap <b>Send receipt</b>. Your appointment is confirmed once the clinic verifies the payment.</li>
+            </ol>
+            <label class="drop" for="fReceipt" id="dropBox">
+              <input type="file" id="fReceipt" accept="image/*,application/pdf">
+              <span class="thumb" id="rcThumb">JPG<br>PNG<br>PDF</span>
+              <span><b id="rcName">Upload proof of payment</b><small id="rcHint">Photo, screenshot or PDF, up to 8 MB</small></span>
+            </label>
+            <label class="f" for="fRef">Reference / transaction number <span style="font-weight:400;color:var(--muted)">(optional)</span><input id="fRef" maxlength="60" autocomplete="off"></label>
+            <div class="msg err" id="payErr" hidden></div>
+            <button type="button" class="btn btn-gold" id="sendReceiptBtn" style="justify-self:start">Send receipt <svg><use href="#i-arrow"/></svg></button>
+          </div>
+          <div class="msg" id="payDone" hidden style="background:color-mix(in srgb,var(--ok) 12%,transparent);color:var(--ok);max-width:560px;width:100%;font-weight:700"></div>
           <pre id="doneSummary"></pre>
           <div class="copy-row" id="doneActions" style="justify-content:center"></div>
           <button type="button" class="btn btn-ghost" id="againBtn">Book another appointment</button>
@@ -829,11 +832,10 @@ $("stepForm").addEventListener("submit", async e => {
   if (!name) return err("Please enter the patient's full name.");
   if (!/^\S+@\S+\.\S+$/.test(email)) return err("Please enter a valid email address so we can confirm your appointment.");
   if (phone.replace(/\D/g,"").length<7) return err("Please enter a mobile number we can reach you on.");
-  if (!RC.data) return err("Please upload your proof of payment (receipt or transfer screenshot).");
   if (!$("fConsent").checked) return err("Please tick the consent box to continue.");
   if ($("fWebsite").value) return;
   const x = describe();
-  const booking = { id: Math.random().toString(36).slice(2,10), slot: slotId(S.date,S.hour), date:S.date, hour:S.hour, mode:S.mode, type:S.type, name, email, phone, age:$("fAge").value||"", reason:$("fReason").value.trim(), paymentRef:$("fRef").value.trim(), receiptName:RC.name, fee:feeFor(S.type), createdAt:new Date().toISOString(), status:"pending payment check" };
+  const booking = { id: Math.random().toString(36).slice(2,10), slot: slotId(S.date,S.hour), date:S.date, hour:S.hour, mode:S.mode, type:S.type, name, email, phone, age:$("fAge").value||"", reason:$("fReason").value.trim(), fee:feeFor(S.type), createdAt:new Date().toISOString(), status:"awaiting payment" };
   const btn=$("submitBtn"); btn.disabled=true; btn.firstChild.textContent="Sending… ";
   let result = "request";
   try {
@@ -849,7 +851,7 @@ $("stepForm").addEventListener("submit", async e => {
       await myRef.set({ bookings:list, updatedAt:Date.now() });
       result = "saved";
     } else if (CONFIG.bookingEndpoint){
-      const r = await fetch(CONFIG.bookingEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...booking, dateLabel:x.dateLabel, timeLabel:x.time, modeLabel:x.modeLabel, typeLabel:x.typeLabel, tzLabel:CONFIG.tzLabel, receipt:{name:RC.name, type:RC.type, data:RC.data}})});
+      const r = await fetch(CONFIG.bookingEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({kind:"booking", ...booking, dateLabel:x.dateLabel, timeLabel:x.time, modeLabel:x.modeLabel, typeLabel:x.typeLabel, tzLabel:CONFIG.tzLabel})});
       if (r.ok) result = "sent";
     }
   } catch(ex){ result = "request"; }
@@ -857,21 +859,25 @@ $("stepForm").addEventListener("submit", async e => {
   finish(result, booking, x);
 });
 
+let LAST = null;
 function finish(result, b, x){
-  const text = `Appointment request for ${CONFIG.doctor}\n${x.typeLabel}\n${x.modeLabel}\n${x.dateLabel}, ${x.time} (${CONFIG.tzLabel})\n\nPatient: ${b.name}${b.age?` (age ${b.age})`:""}\nEmail: ${b.email}\nMobile: ${b.phone}${b.reason?`\nNote: ${b.reason}`:""}${b.fee?`\nFee: ${b.fee}`:""}\nPayment ref: ${b.paymentRef||"(see attached receipt)"}`;
+  LAST = { b, x, result };
+  const text = `Appointment request for ${CONFIG.doctor}\n${x.typeLabel}\n${x.modeLabel}\n${x.dateLabel}, ${x.time} (${CONFIG.tzLabel})\n\nPatient: ${b.name}${b.age?` (age ${b.age})`:""}\nEmail: ${b.email}\nMobile: ${b.phone}${b.reason?`\nNote: ${b.reason}`:""}${b.fee?`\nFee: ${b.fee}`:""}`;
   $("doneSummary").textContent = text;
   const acts = $("doneActions"); acts.innerHTML="";
+  clearReceipt(); $("fRef").value=""; $("payErr").hidden=true; $("payDone").hidden=true; $("payBox").hidden=false; renderFee();
   if (result==="saved" || result==="sent"){
-    $("doneTitle").textContent = "Booking received";
-    $("doneText").textContent = "Thank you. The clinic has your booking and receipt and will confirm your appointment once the payment is verified." + (b.mode==="online" ? " Your secure video link will be emailed before the session." : " Please arrive 10 minutes early.");
+    $("doneTitle").textContent = "Booking received: one last step";
+    $("doneText").textContent = "Your time is reserved. Please pay the consultation fee to the account below and send us the receipt. The clinic will confirm your appointment once the payment is verified.";
   } else {
-    $("doneTitle").textContent = "Almost done: send your request";
-    $("doneText").textContent = `Copy the details below and send them, with your payment receipt, to the clinic at ${CONFIG.email} or ${CONFIG.phone}. Your appointment is confirmed once the clinic verifies your payment.`;
-    const c = document.createElement("button"); c.type="button"; c.className="btn btn-gold"; c.textContent="Copy request details";
-    c.onclick = () => copyText(text, "Request details copied");
+    $("doneTitle").textContent = "Almost done: pay and send your request";
+    $("doneText").textContent = `Pay the fee to the account below, then send your booking details and receipt to the clinic at ${CONFIG.email} or ${CONFIG.phone}. Your appointment is confirmed once the clinic verifies your payment.`;
+    const c = document.createElement("button"); c.type="button"; c.className="btn btn-ghost"; c.textContent="Copy booking details";
+    c.onclick = () => copyText(text, "Booking details copied");
     acts.append(c);
   }
-  show("stepDone"); $("stepForm").reset(); clearReceipt();
+  show("stepDone"); $("stepForm").reset();
+  $("booker").scrollIntoView({behavior:"smooth",block:"start"});
 }
 
 /* ===== Payment + receipt ===== */
@@ -892,7 +898,7 @@ function shrinkImage(file){
 }
 $("fReceipt").addEventListener("change", async e => {
   const f = e.target.files && e.target.files[0]; if(!f) return;
-  $("formErr").hidden = true;
+  $("payErr").hidden = true;
   try{
     if (f.size > 8*1024*1024) throw new Error("That file is larger than 8 MB. Please upload a smaller photo or screenshot.");
     if (f.type==="application/pdf"){
@@ -904,8 +910,31 @@ $("fReceipt").addEventListener("change", async e => {
       $("rcThumb").innerHTML = `<img alt="" src="${RC.data}">`;
     } else throw new Error("Please upload an image (JPG, PNG) or a PDF.");
     $("rcName").textContent = "Receipt attached"; $("rcHint").textContent = f.name + " · tap to change"; $("dropBox").classList.add("has");
-  } catch(ex){ clearReceipt(); e.target.value=""; err(ex.message && ex.message!=="unreadable" ? ex.message : "We could not read that file. Please try a JPG, PNG or PDF."); }
+  } catch(ex){ clearReceipt(); e.target.value=""; payErr(ex.message && ex.message!=="unreadable" ? ex.message : "We could not read that file. Please try a JPG, PNG or PDF."); }
 });
+
+function payErr(m){ $("payErr").textContent=m; $("payErr").hidden=false; }
+$("sendReceiptBtn").onclick = async () => {
+  $("payErr").hidden = true;
+  if (!LAST) return;
+  if (!RC.data) return payErr("Please upload your proof of payment first (receipt or transfer screenshot).");
+  const { b, x } = LAST; const btn = $("sendReceiptBtn"); btn.disabled = true; btn.firstChild.textContent = "Sending… ";
+  let ok = false;
+  try {
+    if (CONFIG.bookingEndpoint){
+      const r = await fetch(CONFIG.bookingEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({kind:"receipt", id:b.id, name:b.name, email:b.email, phone:b.phone, date:b.date, dateLabel:x.dateLabel, timeLabel:x.time, tzLabel:CONFIG.tzLabel, typeLabel:x.typeLabel, modeLabel:x.modeLabel, fee:b.fee, paymentRef:$("fRef").value.trim(), receipt:{name:RC.name, type:RC.type, data:RC.data}})});
+      ok = r.ok;
+    }
+  } catch(e){ ok = false; }
+  btn.disabled = false; btn.firstChild.textContent = "Send receipt ";
+  if (ok){
+    $("payBox").hidden = true;
+    $("payDone").textContent = "Receipt sent. Thank you! The clinic will confirm your appointment by email or text once the payment is verified.";
+    $("payDone").hidden = false;
+  } else {
+    payErr(`We could not send the receipt. Please send it with your booking details to ${CONFIG.email} or ${CONFIG.phone}.`);
+  }
+};
 
 /* ===== Lists (patient's own + clinic view) ===== */
 const esc = s => String(s??"").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));

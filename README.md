@@ -6,7 +6,7 @@ Static site plus one Vercel serverless function (`api/book.js`).
 Edit the `CONFIG` block near the bottom of `index.html`: phone, email, address, hours, weekly schedule, bank details and consultation fees.
 
 ## Booking emails with payment receipts
-Patients deposit the fee to the Landbank account, upload the receipt, and `api/book.js` emails the booking with the receipt attached.
+When a patient submits the form, `api/book.js` emails the booking straight away (with their mobile number, so the clinic can follow up on payment). The patient then sees the Landbank details, pays, and uploads the receipt, which arrives as a second email with the receipt attached.
 
 Set these in Vercel → Project → Settings → Environment Variables, then redeploy:
 
