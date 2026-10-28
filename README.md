@@ -1,4 +1,4 @@
-# Dr. Minerva Molon website
+# Greenery Therapy Nook website (Dr. Minerva Molon)
 
 Static site plus one Vercel serverless function (`api/book.js`).
 

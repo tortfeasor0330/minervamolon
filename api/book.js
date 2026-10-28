@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   }
 
   const { RESEND_API_KEY, CLINIC_EMAIL } = process.env;
-  const FROM_EMAIL = process.env.FROM_EMAIL || "Clinic Bookings <onboarding@resend.dev>";
+  const FROM_EMAIL = process.env.FROM_EMAIL || "Greenery Therapy Nook <onboarding@resend.dev>";
   if (!RESEND_API_KEY || !CLINIC_EMAIL) return res.status(503).json({ error: "not_configured" });
 
   let b = req.body;
