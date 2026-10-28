@@ -930,20 +930,21 @@ $("sendReceiptBtn").onclick = async () => {
   if (!LAST) return;
   if (!RC.data) return payErr("Please upload your proof of payment first (receipt or transfer screenshot).");
   const { b, x } = LAST; const btn = $("sendReceiptBtn"); btn.disabled = true; btn.firstChild.textContent = "Sending… ";
-  let ok = false;
+  let ok = false, failCode = "no_endpoint";
   try {
     if (CONFIG.bookingEndpoint){
       const r = await fetch(CONFIG.bookingEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({kind:"receipt", id:b.id, name:b.name, email:b.email, phone:b.phone, date:b.date, dateLabel:x.dateLabel, timeLabel:x.time, tzLabel:CONFIG.tzLabel, typeLabel:x.typeLabel, modeLabel:x.modeLabel, fee:b.fee, paymentRef:$("fRef").value.trim(), receipt:{name:RC.name, type:RC.type, data:RC.data}})});
       ok = r.ok;
+      if (!ok){ let j={}; try{ j=await r.json(); }catch(_){} failCode = (j.error||"http_"+r.status); }
     }
-  } catch(e){ ok = false; }
+  } catch(e){ ok = false; failCode = "network"; }
   btn.disabled = false; btn.firstChild.textContent = "Send receipt ";
   if (ok){
     $("payBox").hidden = true;
     $("payDone").textContent = "Receipt sent. Thank you! The clinic will confirm your appointment by email or text once the payment is verified.";
     $("payDone").hidden = false;
   } else {
-    payErr(`We could not send the receipt. Please send it with your booking details to ${CONFIG.email} or ${CONFIG.phone}.`);
+    payErr(`We could not send the receipt. Please send it with your booking details to ${CONFIG.email} or ${CONFIG.phone}. (Error code: ${failCode})`);
   }
 };
 
