@@ -271,6 +271,8 @@ label.f input:focus,label.f textarea:focus,label.f select:focus{outline:none;bor
 .pay{border:1.5px solid var(--line);border-radius:18px;padding:18px;display:grid;gap:14px;background:color-mix(in srgb,var(--gold) 6%,transparent)}
 .pay-head{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 16px;align-items:baseline}
 .pay-head b{font-family:var(--display);font-size:1.15rem}
+.pay-head .fee{font-family:var(--display);font-size:1.5rem;color:#b07a0e}
+.fee-note{margin:-6px 0 0;font-size:.88rem;color:var(--muted)}
 .fee{font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
 .bank{background:var(--forest);color:var(--forest-ink);border-radius:14px;padding:16px 18px;display:grid;gap:10px}
 .bank .row{display:grid;grid-template-columns:120px 1fr auto;gap:10px;align-items:center;font-size:.9rem}
@@ -420,7 +422,7 @@ footer.foot{padding-block:48px 24px}
         <li><div><b>Choose how to meet</b><span>Face-to-face or online.</span></div></li>
         <li><div><b>Pick a date and time</b><span>Green dots show days with open slots.</span></div></li>
         <li><div><b>Tell us about you</b><span>Just your contact details and, if you like, a short note.</span></div></li>
-        <li><div><b>Pay and send your receipt</b><span>After you submit, we show Dr. Molon's Landbank details so you can pay and upload the receipt.</span></div></li>
+        <li><div><b>Pay the ₱500 reservation</b><span>After you submit, we show Dr. Molon's Landbank details. The ₱500 confirms your slot and is deducted from your professional fee.</span></div></li>
       </ol>
       <p class="note-small" id="tzNote">Times are shown in clinic time.</p>
     </aside>
@@ -478,14 +480,15 @@ footer.foot{padding-block:48px 24px}
           <h3 id="doneTitle">Appointment booked</h3>
           <p id="doneText" style="color:var(--muted);max-width:46ch"></p>
           <div class="pay" id="payBox" style="text-align:left;width:100%;max-width:560px">
-            <div class="pay-head"><b>Pay your consultation fee</b><span class="fee" id="feeLine"></span></div>
+            <div class="pay-head"><b>Pay the reservation fee to confirm</b><span class="fee" id="feeLine"></span></div>
+            <p class="fee-note" id="feeNote"></p>
             <div class="bank">
               <div class="row"><span>Bank</span><strong id="bkBank"></strong><span></span></div>
               <div class="row"><span>Account name</span><strong id="bkName"></strong><button type="button" class="copy-btn" id="cpName">Copy</button></div>
               <div class="row"><span id="bkType">Account number</span><strong class="acct" id="bkNo"></strong><button type="button" class="copy-btn" id="cpNo">Copy</button></div>
             </div>
             <ol class="pay-steps">
-              <li>Send the fee by bank transfer (InstaPay or PESONet from any bank or e-wallet) or deposit it at any Landbank branch.</li>
+              <li>Send the reservation fee by bank transfer (InstaPay or PESONet from any bank or e-wallet) or deposit it at any Landbank branch.</li>
               <li>Take a screenshot or photo of the receipt or transfer confirmation.</li>
               <li>Upload it below and tap <b>Send receipt</b>. Your appointment is confirmed once the clinic verifies the payment.</li>
             </ol>
@@ -640,6 +643,7 @@ footer.foot{padding-block:48px 24px}
       <details><summary>Do I need a referral?</summary><p>No referral is needed to book. If you have reports from another doctor or previous treatment, please bring them or send them before the visit.</p></details>
       <details><summary>How do online consultations work?</summary><p>You receive a secure video link by email before the session. Join from a quiet, private place using a phone, tablet or computer with a camera.</p></details>
       <details><summary>Is everything I share confidential?</summary><p>Yes. What you discuss stays between you and the doctor, except in the rare cases where the law requires otherwise, such as a serious risk to someone's safety. Dr. Minerva will explain this at your first visit.</p></details>
+      <details><summary>How much does a consultation cost?</summary><p>The professional fee is ₱1,500 to ₱2,500, depending on the assessment of your condition. To confirm a booking, you pay a ₱500 reservation fee to Dr. Molon's Landbank account. The ₱500 is deducted from your professional fee.</p></details>
       <details><summary>Can I reschedule or cancel?</summary><p>Yes. Please let the clinic know at least 24 hours ahead so the time can be offered to another patient.</p></details>
     </div>
   </div>
@@ -715,8 +719,8 @@ const CONFIG = {
   bookingEndpoint: "/api/book",
   // Payment details shown in the booking form
   bank: { bank: "Landbank of the Philippines", accountName: "Minerva P. Molon", accountType: "Savings Account", accountNumber: "1736 4865 78" },
-  // Consultation fees in pesos. Leave a value empty to hide it.
-  fees: { initial: "", followup: "" }
+  // Fees in pesos. The reservation fee confirms the booking and is deducted from the professional fee.
+  fees: { reservation: "500", professionalMin: "1,500", professionalMax: "2,500" }
 };
 
 /* ===== Time helpers (clinic time zone) ===== */
@@ -839,7 +843,7 @@ $("stepForm").addEventListener("submit", async e => {
   if (!$("fConsent").checked) return err("Please tick the consent box to continue.");
   if ($("fWebsite").value) return;
   const x = describe();
-  const booking = { id: Math.random().toString(36).slice(2,10), slot: slotId(S.date,S.hour), date:S.date, hour:S.hour, mode:S.mode, type:S.type, name, email, phone, age:$("fAge").value||"", reason:$("fReason").value.trim(), fee:feeFor(S.type), createdAt:new Date().toISOString(), status:"awaiting payment" };
+  const booking = { id: Math.random().toString(36).slice(2,10), slot: slotId(S.date,S.hour), date:S.date, hour:S.hour, mode:S.mode, type:S.type, name, email, phone, age:$("fAge").value||"", reason:$("fReason").value.trim(), fee:feeFor(), createdAt:new Date().toISOString(), status:"awaiting payment" };
   const btn=$("submitBtn"); btn.disabled=true; btn.firstChild.textContent="Sending… ";
   let result = "request";
   try {
@@ -872,10 +876,10 @@ function finish(result, b, x){
   clearReceipt(); $("fRef").value=""; $("payErr").hidden=true; $("payDone").hidden=true; $("payBox").hidden=false; renderFee();
   if (result==="saved" || result==="sent"){
     $("doneTitle").textContent = "Booking received: one last step";
-    $("doneText").textContent = "Your time is reserved. Please pay the consultation fee to the account below and send us the receipt. The clinic will confirm your appointment once the payment is verified.";
+    $("doneText").textContent = `Your time is held for you. To confirm it, pay the ${peso(CONFIG.fees.reservation)} reservation fee to the account below and send us the receipt. The clinic confirms your appointment once the payment is verified.`;
   } else {
     $("doneTitle").textContent = "Almost done: pay and send your request";
-    $("doneText").textContent = `Pay the fee to the account below, then send your booking details and receipt to the clinic at ${CONFIG.email} or ${CONFIG.phone}. Your appointment is confirmed once the clinic verifies your payment.`;
+    $("doneText").textContent = `Pay the ${peso(CONFIG.fees.reservation)} reservation fee to the account below, then send your booking details and receipt to the clinic at ${CONFIG.email} or ${CONFIG.phone}. Your appointment is confirmed once the clinic verifies your payment.`;
     const c = document.createElement("button"); c.type="button"; c.className="btn btn-ghost"; c.textContent="Copy booking details";
     c.onclick = () => copyText(text, "Booking details copied");
     acts.append(c);
@@ -887,8 +891,11 @@ function finish(result, b, x){
 /* ===== Payment + receipt ===== */
 const RC = { name:"", type:"", data:"" };
 const peso = v => v ? (/^[0-9.,\s]+$/.test(v) ? "₱" + v.trim() : v) : "";
-const feeFor = t => peso(t==="initial" ? CONFIG.fees.initial : CONFIG.fees.followup);
-function renderFee(){ const f=feeFor(S.type); $("feeLine").textContent = f ? `${S.type==="initial"?"First consultation":"Follow-up"}: ${f}` : "The clinic will confirm the amount"; }
+const feeFor = () => `Reservation ${peso(CONFIG.fees.reservation)} (deductible) · Professional fee ${peso(CONFIG.fees.professionalMin)} to ${peso(CONFIG.fees.professionalMax)}`;
+function renderFee(){
+  $("feeLine").textContent = peso(CONFIG.fees.reservation);
+  $("feeNote").textContent = `The total professional fee is ${peso(CONFIG.fees.professionalMin)} to ${peso(CONFIG.fees.professionalMax)}, depending on the assessment of your condition. Your ${peso(CONFIG.fees.reservation)} reservation is deducted from it.`;
+}
 $("bkBank").textContent = CONFIG.bank.bank; $("bkName").textContent = CONFIG.bank.accountName;
 $("bkType").textContent = CONFIG.bank.accountType || "Account number"; $("bkNo").textContent = CONFIG.bank.accountNumber;
 $("cpNo").onclick = () => navigator.clipboard?.writeText(CONFIG.bank.accountNumber.replace(/\s/g,"")).then(()=>toast("Account number copied"),()=>toast(CONFIG.bank.accountNumber));
