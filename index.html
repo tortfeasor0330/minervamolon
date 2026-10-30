@@ -952,7 +952,7 @@ $("sendReceiptBtn").onclick = async () => {
     if (CONFIG.bookingEndpoint){
       const r = await fetch(CONFIG.bookingEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({kind:"receipt", id:b.id, name:b.name, email:b.email, phone:b.phone, date:b.date, dateLabel:x.dateLabel, timeLabel:x.time, tzLabel:CONFIG.tzLabel, typeLabel:x.typeLabel, modeLabel:x.modeLabel, fee:b.fee, paymentRef:$("fRef").value.trim(), receipt:{name:RC.name, type:RC.type, data:RC.data}})});
       ok = r.ok;
-      if (!ok){ let j={}; try{ j=await r.json(); }catch(_){} failCode = (j.error||"http_"+r.status); }
+      if (!ok){ let j={}; try{ j=await r.json(); }catch(_){} failCode = (j.error||"http_"+r.status) + (j.detail ? " · " + j.detail : ""); }
     }
   } catch(e){ ok = false; failCode = "network"; }
   btn.disabled = false; btn.firstChild.textContent = "Send receipt ";

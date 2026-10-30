@@ -48,6 +48,7 @@ async function sendToGHL(payload) {
   }
 }
 
+let lastEmailError = "";
 async function sendEmail({ subject, html, text, replyTo, attachments }) {
   const { RESEND_API_KEY, CLINIC_EMAIL } = process.env;
   if (!RESEND_API_KEY || !CLINIC_EMAIL) return null;
@@ -60,15 +61,22 @@ async function sendEmail({ subject, html, text, replyTo, attachments }) {
       headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    if (!r.ok) console.error("Resend error", r.status, await r.text());
+    if (!r.ok) {
+      const t = await r.text();
+      console.error("Resend error", r.status, t);
+      let msg = ""; try { msg = JSON.parse(t).message || ""; } catch { msg = t; }
+      lastEmailError = `resend_${r.status}: ${String(msg).slice(0, 160)}`;
+    }
     return r.ok;
   } catch (e) {
     console.error("Email failed", e);
+    lastEmailError = "resend_unreachable";
     return false;
   }
 }
 
 export default async function handler(req, res) {
+  lastEmailError = "";
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ error: "method_not_allowed" });
@@ -159,5 +167,5 @@ export default async function handler(req, res) {
   const [ghlOk, emailOk] = await Promise.all([sendToGHL(ghl), sendEmail({ subject, html, text, replyTo: email, attachments })]);
 
   if (ghlOk || emailOk) return res.status(200).json({ ok: true, ghl: ghlOk, email: emailOk, receipt_hosted: !!ghl.receipt_url });
-  return res.status(502).json({ error: ghlOk === false ? "ghl_failed" : "email_failed" });
+  return res.status(502).json({ error: ghlOk === false ? "ghl_failed" : "email_failed", detail: lastEmailError });
 }
