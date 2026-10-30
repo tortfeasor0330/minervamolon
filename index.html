@@ -287,6 +287,11 @@ label.f input:focus,label.f textarea:focus,label.f select:focus{outline:none;bor
 .drop .thumb{width:56px;height:56px;border-radius:10px;background:var(--cream);display:grid;place-items:center;flex:none;overflow:hidden;font-size:.7rem;font-weight:700;color:var(--muted)}
 .drop .thumb img{width:100%;height:100%;object-fit:cover}
 .drop b{display:block;font-size:.92rem}
+.drop > span:last-child{min-width:0;overflow-wrap:anywhere}
+.done,.pay,.bank{min-width:0;max-width:100%}
+.done pre{overflow-wrap:anywhere}
+.fallback{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.fallback a{font-size:.9rem;padding:.6em 1.1em}
 .drop small{color:var(--muted);font-size:.8rem}
 @media (max-width:520px){.bank .row{grid-template-columns:1fr auto}.bank .row span{grid-column:1/-1}}
 
@@ -925,6 +930,18 @@ $("fReceipt").addEventListener("change", async e => {
 });
 
 function payErr(m){ $("payErr").textContent=m; $("payErr").hidden=false; }
+function bookingText(b, x){
+  return `Hello Greenery Therapy Nook, I booked an appointment and paid the ${peso(CONFIG.fees.reservation)} reservation. My receipt is attached.\n\n${x.typeLabel}\n${x.modeLabel}\n${x.dateLabel}, ${x.time} (${CONFIG.tzLabel})\n\nName: ${b.name}\nMobile: ${b.phone}\nEmail: ${b.email}${$("fRef").value.trim()?`\nPayment ref: ${$("fRef").value.trim()}`:""}`;
+}
+function showFallback(b, x, code){
+  const box=$("payErr");
+  const t=bookingText(b,x);
+  const mail=`mailto:${CONFIG.email}?subject=${encodeURIComponent("Booking and receipt: "+b.name+" · "+x.dateLabel+" "+x.time)}&body=${encodeURIComponent(t)}`;
+  const sms=`sms:${CONFIG.phone.replace(/\s/g,"")}?&body=${encodeURIComponent(t)}`;
+  box.innerHTML = `<b>Almost there.</b> Our online form couldn't deliver your receipt, so please send it to the clinic directly. Tap a button below, then attach your receipt screenshot before sending.<div class="fallback"><a class="btn btn-gold" href="${mail}">Email the clinic</a><a class="btn btn-ghost" href="${sms}">Text the clinic</a><button type="button" class="btn btn-ghost" id="fbCopy">Copy details</button></div><small style="display:block;margin-top:8px;opacity:.75">${esc(CONFIG.email)} · ${esc(CONFIG.phone)} · ref ${esc(code)}</small>`;
+  box.hidden=false;
+  $("fbCopy").onclick=()=>copyText(t,"Booking details copied");
+}
 $("sendReceiptBtn").onclick = async () => {
   $("payErr").hidden = true;
   if (!LAST) return;
@@ -944,7 +961,7 @@ $("sendReceiptBtn").onclick = async () => {
     $("payDone").textContent = "Receipt sent. Thank you! The clinic will confirm your appointment by email or text once the payment is verified.";
     $("payDone").hidden = false;
   } else {
-    payErr(`We could not send the receipt. Please send it with your booking details to ${CONFIG.email} or ${CONFIG.phone}. (Error code: ${failCode})`);
+    showFallback(b, x, failCode);
   }
 };
 
