@@ -11,7 +11,48 @@
 //                 BLOB_READ_WRITE_TOKEN  – optional fallback host (Vercel Blob) if GHL_API_KEY is not set
 //   Email:        RESEND_API_KEY, CLINIC_EMAIL, optional FROM_EMAIL (see README)
 
+import { ghl as ghlApi, ghlKey, locationId, calendarFor, clinicISO } from "./_ghl.js";
+
 const MAX_RECEIPT_BYTES = 3.5 * 1024 * 1024;
+
+// Create the contact and the appointment in the doctor's GoHighLevel calendar.
+// Returns { ok, appointmentId, contactId } or { ok:false, code } ; code "slot_taken" when GHL refuses the time.
+async function bookInGHL({ b, name, email, phone, firstName, lastName }) {
+  const mode = b.mode === "online" ? "online" : "inPerson";
+  const calendarId = calendarFor(mode);
+  if (!ghlKey() || !calendarId) return null;
+  const date = String(b.date || ""), hour = Number(b.hour);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !(hour >= 0 && hour <= 23)) return { ok: false, code: "bad_time" };
+  try {
+    const c = await ghlApi("/contacts/upsert", {
+      method: "POST", version: "2021-07-28",
+      body: { locationId: locationId(), firstName, lastName, name, email, phone: toE164(phone), source: "greenerytherapynook.com", tags: ["website booking"] },
+    });
+    const contactId = c.json && c.json.contact && c.json.contact.id;
+    if (!c.ok || !contactId) { console.error("GHL upsert error", c.status, c.text); return { ok: false, code: `ghl_contact_${c.status}` }; }
+    const isOnline = mode === "online";
+    const a = await ghlApi("/calendars/events/appointments", {
+      method: "POST", version: "2021-04-15",
+      body: {
+        calendarId, locationId: locationId(), contactId,
+        startTime: clinicISO(date, hour), endTime: clinicISO(date, hour + 1),
+        title: `${b.type === "followup" ? "Follow-up" : "First consultation"} · ${isOnline ? "Online" : "Face-to-face"} · ${name}`,
+        appointmentStatus: "new",
+        description: [`Booked on greenerytherapynook.com`, `Mobile: ${phone}`, `Email: ${email}`, b.age ? `Age: ${b.age}` : "", b.reason ? `Note: ${b.reason}` : "", `Awaiting ₱500 reservation (booking ${b.id || ""})`].filter(Boolean).join("\n"),
+      },
+    });
+    if (!a.ok) {
+      console.error("GHL appointment error", a.status, a.text);
+      const msg = ((a.json && a.json.message) || a.text || "").toString().toLowerCase();
+      const taken = a.status === 400 && /slot|available|booked|conflict/.test(msg);
+      return { ok: false, code: taken ? "slot_taken" : `ghl_appt_${a.status}`, contactId };
+    }
+    return { ok: true, appointmentId: (a.json && (a.json.id || (a.json.appointment && a.json.appointment.id))) || "", contactId };
+  } catch (e) {
+    console.error("GHL booking failed", e);
+    return { ok: false, code: "ghl_unreachable" };
+  }
+}
 
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const clip = (s, n) => String(s ?? "").slice(0, n);
@@ -115,7 +156,8 @@ export default async function handler(req, res) {
   }
   const hasGHL = !!(process.env.GHL_WEBHOOK_URL || "").trim();
   const hasEmail = !!(process.env.RESEND_API_KEY && process.env.CLINIC_EMAIL);
-  if (!hasGHL && !hasEmail) return res.status(503).json({ error: "not_configured" });
+  const hasCalendar = !!(ghlKey() && calendarFor("inPerson"));
+  if (!hasGHL && !hasEmail && !hasCalendar) return res.status(503).json({ error: "not_configured" });
 
   let b = req.body;
   if (typeof b === "string") { try { b = JSON.parse(b); } catch { b = null; } }
@@ -152,8 +194,18 @@ export default async function handler(req, res) {
     receipt_url: "",
     receipt_file_id: "",
     receipt_file_name: "",
+    appointment_id: clip(b.appointmentId, 60),
+    calendar_sync: "",
     source: "greenerytherapynook.com",
   };
+
+  // New booking: put it in the GHL calendar first, so a taken slot is refused before anything else is sent
+  let cal = null;
+  if (kind === "booking") {
+    cal = await bookInGHL({ b, name, email, phone, firstName: ghl.first_name, lastName: ghl.last_name });
+    if (cal && cal.code === "slot_taken") return res.status(409).json({ error: "slot_taken" });
+    if (cal) { ghl.appointment_id = cal.appointmentId || ""; ghl.calendar_sync = cal.ok ? "booked" : cal.code; }
+  }
 
   let attachments, subject, heading, intro, rows;
 
@@ -205,6 +257,7 @@ export default async function handler(req, res) {
 
   const [ghlOk, emailOk] = await Promise.all([sendToGHL(ghl), sendEmail({ subject, html, text, replyTo: email, attachments })]);
 
-  if (ghlOk || emailOk) return res.status(200).json({ ok: true, ghl: ghlOk, email: emailOk, receipt_hosted: !!ghl.receipt_url, upload_error: lastUploadError || undefined });
+  const calOk = cal ? cal.ok : null;
+  if (ghlOk || emailOk || calOk) return res.status(200).json({ ok: true, ghl: ghlOk, email: emailOk, calendar: cal ? (cal.ok ? "booked" : cal.code) : undefined, appointment_id: ghl.appointment_id || undefined, receipt_hosted: !!ghl.receipt_url, upload_error: lastUploadError || undefined });
   return res.status(502).json({ error: ghlOk === false ? "ghl_failed" : "email_failed", detail: lastEmailError });
 }

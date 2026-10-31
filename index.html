@@ -722,6 +722,8 @@ const CONFIG = {
   // When this site is hosted on its own domain, set a webhook URL (e.g. a GoHighLevel or Zapier webhook)
   // and every booking is POSTed there as JSON.
   bookingEndpoint: "/api/book",
+  // Live availability from the doctor's GoHighLevel calendar (falls back to the weekly hours below if unavailable)
+  slotsEndpoint: "/api/slots",
   // Payment details shown in the booking form
   bank: { bank: "Landbank of the Philippines", accountName: "Minerva P. Molon", accountType: "Savings Account", accountNumber: "1736 4865 78" },
   // Fees in pesos. The reservation fee confirms the booking and is deducted from the professional fee.
@@ -748,7 +750,7 @@ const dayName = (y,m,d) => new Date(Date.UTC(y,m-1,d)).toLocaleDateString("en-GB
 const weekday = (y,m,d) => new Date(Date.UTC(y,m-1,d)).getUTCDay();
 
 /* ===== State ===== */
-const S = { mode:"inPerson", type:"initial", viewY:0, viewM:0, date:null, hour:null, taken:new Set(), db:null, user:null, uid:null, admin:false, myBookings:[] };
+const S = { mode:"inPerson", type:"initial", viewY:0, viewM:0, date:null, hour:null, taken:new Set(), live:{inPerson:null, online:null}, liveState:{inPerson:"", online:""}, db:null, user:null, uid:null, admin:false, myBookings:[] };
 const $ = id => document.getElementById(id);
 const nowP = partsIn(CONFIG.timeZone, Date.now());
 S.viewY = nowP.y; S.viewM = nowP.m;
@@ -761,7 +763,31 @@ function hoursFor(y,m,d,mode){
   return list.filter(h => { const t=clinicToUTC(y,m,d,h); return t >= Date.now()+CONFIG.minNoticeHours*36e5 && t <= maxT; });
 }
 const slotId = (date,h) => `${date}_${pad(h)}`;
-const freeHours = (y,m,d,mode) => hoursFor(y,m,d,mode).filter(h=>!S.taken.has(slotId(ymd(y,m,d),h)));
+// A slot is unavailable if someone booked it here, or (when synced) GoHighLevel doesn't list it as free
+function isTaken(date, h, mode){
+  if (S.taken.has(slotId(date,h))) return true;
+  const live = S.live[mode];
+  return !!live && !(live[date] && live[date].has(h));
+}
+const freeHours = (y,m,d,mode) => hoursFor(y,m,d,mode).filter(h=>!isTaken(ymd(y,m,d),h,mode));
+
+/* ===== Live availability from the doctor's GoHighLevel calendar ===== */
+async function loadLive(mode, force){
+  if (!CONFIG.slotsEndpoint || (!force && S.liveState[mode])) return;
+  S.liveState[mode] = "loading"; if (mode===S.mode) renderSlots();
+  try{
+    const from = ymd(nowP.y,nowP.m,nowP.d), e = partsIn(CONFIG.timeZone, maxT), to = ymd(e.y,e.m,e.d);
+    const r = await fetch(`${CONFIG.slotsEndpoint}?mode=${mode}&from=${from}&to=${to}`, {cache:"no-store"});
+    if (!r.ok) throw new Error("slots "+r.status);
+    const j = await r.json(); const map = {};
+    for (const [d, hrs] of Object.entries(j.slots||{})) map[d] = new Set(hrs);
+    S.live[mode] = map; S.liveState[mode] = "live";
+  } catch(e){ S.liveState[mode] = "off"; }   // not configured or unreachable: fall back to the weekly schedule
+  if (mode===S.mode){
+    if (S.date){ const [y,m,d]=S.date.split("-").map(Number); if(!freeHours(y,m,d,mode).length){ S.date=null; S.hour=null; } }
+    renderAll();
+  }
+}
 
 /* ===== Calendar ===== */
 function renderCal(){
@@ -788,11 +814,12 @@ function renderSlots(){
   const all = hoursFor(y,m,d,S.mode);
   $("slotsTitle").textContent = dayName(y,m,d);
   $("slotsSub").textContent = `${S.mode==="online"?"Online":"Face-to-face"} · ${CONFIG.tzLabel}`;
+  if (S.liveState[S.mode]==="loading"){ box.innerHTML = `<div class="empty">Checking Dr. Molon's live schedule…</div>`; return; }
   if (!all.length){ box.innerHTML = `<div class="empty">No ${S.mode==="online"?"online":"clinic"} times on this day. Try another date or switch consultation type.</div>`; return; }
   const showLocal = !sameTZ();
   box.innerHTML = `<div class="slots">${all.map(h=>{
-    const taken = S.taken.has(slotId(S.date,h));
-    const local = showLocal ? `<small>${fmtLocalDay(clinicToUTC(y,m,d,h))}, ${fmtLocal(clinicToUTC(y,m,d,h))} your time</small>` : (taken?`<small>Booked</small>`:"");
+    const taken = isTaken(S.date,h,S.mode);
+    const local = taken ? `<small>Unavailable</small>` : (showLocal ? `<small>${fmtLocalDay(clinicToUTC(y,m,d,h))}, ${fmtLocal(clinicToUTC(y,m,d,h))} your time</small>` : "");
     return `<button type="button" class="slot" data-h="${h}" ${taken?"disabled":""} aria-pressed="${S.hour===h}">${fmtHour(h)}${local}</button>`;
   }).join("")}</div>`;
 }
@@ -817,7 +844,7 @@ $("nextM").onclick = () => { S.viewM++; if(S.viewM>12){S.viewM=1;S.viewY++;} ren
 function setMode(mode){
   S.mode=mode; $("modeF2F").setAttribute("aria-pressed", mode==="inPerson"); $("modeOnl").setAttribute("aria-pressed", mode==="online");
   if (S.date){ const [y,m,d]=S.date.split("-").map(Number); if(!freeHours(y,m,d,mode).length) S.date=null; }
-  S.hour=null; renderAll();
+  S.hour=null; renderAll(); loadLive(mode);
 }
 $("modeF2F").onclick=()=>setMode("inPerson"); $("modeOnl").onclick=()=>setMode("online");
 function setType(t){ S.type=t; $("typeInitial").setAttribute("aria-pressed",t==="initial"); $("typeFollow").setAttribute("aria-pressed",t==="followup"); if (window.renderFee) renderFee(); }
@@ -865,7 +892,8 @@ $("stepForm").addEventListener("submit", async e => {
       result = "saved";
     } else if (CONFIG.bookingEndpoint){
       const r = await fetch(CONFIG.bookingEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({kind:"booking", ...booking, dateLabel:x.dateLabel, timeLabel:x.time, modeLabel:x.modeLabel, typeLabel:x.typeLabel, tzLabel:CONFIG.tzLabel})});
-      if (r.ok) result = "sent";
+      if (r.status===409){ S.taken.add(booking.slot); S.hour=null; show("stepPick"); renderAll(); loadLive(booking.mode, true); toast("Sorry, that time was just booked. Please choose another."); return; }
+      if (r.ok){ result = "sent"; try{ const j=await r.json(); booking.appointmentId = j.appointment_id||""; }catch(_){} if (S.live[booking.mode] && S.live[booking.mode][booking.date]) S.live[booking.mode][booking.date].delete(booking.hour); }
     }
   } catch(ex){ result = "request"; }
   finally { btn.disabled=false; btn.firstChild.textContent="Submit booking "; }
@@ -950,7 +978,7 @@ $("sendReceiptBtn").onclick = async () => {
   let ok = false, failCode = "no_endpoint";
   try {
     if (CONFIG.bookingEndpoint){
-      const r = await fetch(CONFIG.bookingEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({kind:"receipt", id:b.id, name:b.name, email:b.email, phone:b.phone, date:b.date, dateLabel:x.dateLabel, timeLabel:x.time, tzLabel:CONFIG.tzLabel, typeLabel:x.typeLabel, modeLabel:x.modeLabel, fee:b.fee, paymentRef:$("fRef").value.trim(), receipt:{name:RC.name, type:RC.type, data:RC.data}})});
+      const r = await fetch(CONFIG.bookingEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({kind:"receipt", id:b.id, appointmentId:b.appointmentId||"", mode:b.mode, name:b.name, email:b.email, phone:b.phone, date:b.date, dateLabel:x.dateLabel, timeLabel:x.time, tzLabel:CONFIG.tzLabel, typeLabel:x.typeLabel, modeLabel:x.modeLabel, fee:b.fee, paymentRef:$("fRef").value.trim(), receipt:{name:RC.name, type:RC.type, data:RC.data}})});
       ok = r.ok;
       if (!ok){ let j={}; try{ j=await r.json(); }catch(_){} failCode = (j.error||"http_"+r.status) + (j.detail ? " · " + j.detail : ""); }
     }
@@ -1018,7 +1046,7 @@ const secs = ["home","book","services","about","consultations","faq","contact"];
 const io = "IntersectionObserver" in window ? new IntersectionObserver(es=>es.forEach(en=>{ if(en.isIntersecting){ document.querySelectorAll("#navList a").forEach(a=>a.classList.toggle("on", a.getAttribute("href")==="#"+en.target.id)); } }),{rootMargin:"-45% 0px -50% 0px"}) : null;
 if (io) secs.forEach(s=>{ const el=$(s); if(el) io.observe(el); });
 
-renderAll(); renderFee();
+renderAll(); renderFee(); loadLive(S.mode);
 
 /* ===== Live data (when opened on claude.ai) ===== */
 (async () => {

@@ -25,3 +25,16 @@ Until the variables are set, patients see their booking summary and are asked to
 | `GHL_WEBHOOK_URL` | Inbound Webhook URL from the "Website bookings" workflow |
 | `GHL_API_KEY` | Sub-account Private Integration token with the `medias.write` scope. Receipts are uploaded to the sub-account's Media Storage and the workflow receives `receipt_url`, `receipt_file_id`, `receipt_file_name`. |
 | `GHL_RECEIPTS_FOLDER_ID` | Optional: id of a Media Storage folder for receipts |
+
+## Calendar sync with GoHighLevel
+The booking calendar on the site reads live availability from the doctor's GHL calendar (`/api/slots`) and books each appointment there (`/api/book`).
+The site's weekly schedule in `CONFIG.hours` still decides which hours are face-to-face vs online; GHL decides what is actually free (working hours, blocked days, existing bookings).
+
+| Variable | Value |
+|---|---|
+| `GHL_CALENDAR_ID` | Calendar ID of Dr. Molon's GHL calendar (used for both modes) |
+| `GHL_CALENDAR_ID_ONLINE` | Optional: a separate calendar for online sessions |
+| `GHL_LOCATION_ID` | Optional: sub-account (location) ID; defaults to the Greenery Therapy Nook sub-account |
+
+The Private Integration (`GHL_API_KEY`) needs these scopes: `calendars.readonly`, `calendars/events.write`, `contacts.write`, `medias.write`.
+If the calendar isn't configured or GHL is unreachable, the site falls back to the weekly schedule.
