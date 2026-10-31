@@ -18,3 +18,10 @@ Set these in Vercel → Project → Settings → Environment Variables, then red
 
 Without `FROM_EMAIL`, Resend's test sender is used, which only delivers to the email you signed up to Resend with.
 Until the variables are set, patients see their booking summary and are asked to send it with the receipt to the clinic manually.
+
+## GoHighLevel (automation)
+| Variable | Value |
+|---|---|
+| `GHL_WEBHOOK_URL` | Inbound Webhook URL from the "Website bookings" workflow |
+| `GHL_API_KEY` | Sub-account Private Integration token with the `medias.write` scope. Receipts are uploaded to the sub-account's Media Storage and the workflow receives `receipt_url`, `receipt_file_id`, `receipt_file_name`. |
+| `GHL_RECEIPTS_FOLDER_ID` | Optional: id of a Media Storage folder for receipts |

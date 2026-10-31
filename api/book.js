@@ -4,9 +4,11 @@
 //   kind "receipt": sent when the patient uploads proof of payment.
 //
 // Delivery channels (configure one or both in Vercel → Project → Settings → Environment Variables):
-//   GoHighLevel:  GHL_WEBHOOK_URL      – the "Inbound Webhook" trigger URL from a GHL workflow
-//                 BLOB_READ_WRITE_TOKEN – added automatically when a Vercel Blob store is connected;
-//                                         used to host the receipt so GHL receives a link to it
+//   GoHighLevel:  GHL_WEBHOOK_URL        – the "Inbound Webhook" trigger URL from a GHL workflow
+//                 GHL_API_KEY            – sub-account Private Integration token (scope: medias.write);
+//                                          receipts are uploaded to the sub-account's Media Storage
+//                 GHL_RECEIPTS_FOLDER_ID – optional Media Storage folder id for receipts
+//                 BLOB_READ_WRITE_TOKEN  – optional fallback host (Vercel Blob) if GHL_API_KEY is not set
 //   Email:        RESEND_API_KEY, CLINIC_EMAIL, optional FROM_EMAIL (see README)
 
 const MAX_RECEIPT_BYTES = 3.5 * 1024 * 1024;
@@ -23,15 +25,44 @@ function toE164(phone) {
   return d;
 }
 
+let lastUploadError = "";
+// Upload to the GoHighLevel sub-account's Media Storage (POST /medias/upload-file, Version 2021-07-28)
+async function uploadReceiptToGHL({ bytes, contentType, filename }) {
+  const key = process.env.GHL_API_KEY;
+  if (!key) return null;
+  try {
+    const form = new FormData();
+    form.append("file", new Blob([bytes], { type: contentType }), filename);
+    form.append("name", filename);
+    form.append("hosted", "false");
+    if (process.env.GHL_RECEIPTS_FOLDER_ID) form.append("parentId", process.env.GHL_RECEIPTS_FOLDER_ID);
+    const r = await fetch("https://services.leadconnectorhq.com/medias/upload-file", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, Version: "2021-07-28", Accept: "application/json" },
+      body: form,
+    });
+    const t = await r.text();
+    if (!r.ok) { console.error("GHL media upload error", r.status, t); lastUploadError = `ghl_media_${r.status}`; return null; }
+    const j = JSON.parse(t);
+    return { url: j.url || "", fileId: j.fileId || "" };
+  } catch (e) {
+    console.error("GHL media upload failed", e);
+    lastUploadError = "ghl_media_unreachable";
+    return null;
+  }
+}
+
 async function uploadReceipt({ bytes, contentType, filename }) {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) return "";
+  const g = await uploadReceiptToGHL({ bytes, contentType, filename });
+  if (g && g.url) return g;
+  if (!process.env.BLOB_READ_WRITE_TOKEN) return { url: "", fileId: "" };
   try {
     const { put } = await import("@vercel/blob");
     const blob = await put(`receipts/${filename}`, bytes, { access: "public", contentType, addRandomSuffix: true });
-    return blob.url;
+    return { url: blob.url, fileId: "" };
   } catch (e) {
     console.error("Receipt upload failed", e);
-    return "";
+    return { url: "", fileId: "" };
   }
 }
 
@@ -77,6 +108,7 @@ async function sendEmail({ subject, html, text, replyTo, attachments }) {
 
 export default async function handler(req, res) {
   lastEmailError = "";
+  lastUploadError = "";
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ error: "method_not_allowed" });
@@ -118,6 +150,8 @@ export default async function handler(req, res) {
     patient_note: clip(b.reason, 600),
     payment_reference: "",
     receipt_url: "",
+    receipt_file_id: "",
+    receipt_file_name: "",
     source: "greenerytherapynook.com",
   };
 
@@ -132,7 +166,12 @@ export default async function handler(req, res) {
     const filename = `receipt-${clip(b.date, 10)}-${name.replace(/[^a-z0-9]+/gi, "-").toLowerCase().slice(0, 40)}.${ext}`;
     attachments = [{ filename, content: m[2] }];
     ghl.payment_reference = clip(b.paymentRef, 60);
-    if (hasGHL) ghl.receipt_url = await uploadReceipt({ bytes: Buffer.from(m[2], "base64"), contentType: m[1], filename });
+    if (hasGHL) {
+      const up = await uploadReceipt({ bytes: Buffer.from(m[2], "base64"), contentType: m[1], filename });
+      ghl.receipt_url = up.url;
+      ghl.receipt_file_id = up.fileId;
+      ghl.receipt_file_name = filename;
+    }
     subject = `Payment receipt: ${name} · ${when}`;
     heading = "Payment receipt received";
     intro = "The patient uploaded proof of payment (attached). Please verify it and confirm the appointment.";
@@ -166,6 +205,6 @@ export default async function handler(req, res) {
 
   const [ghlOk, emailOk] = await Promise.all([sendToGHL(ghl), sendEmail({ subject, html, text, replyTo: email, attachments })]);
 
-  if (ghlOk || emailOk) return res.status(200).json({ ok: true, ghl: ghlOk, email: emailOk, receipt_hosted: !!ghl.receipt_url });
+  if (ghlOk || emailOk) return res.status(200).json({ ok: true, ghl: ghlOk, email: emailOk, receipt_hosted: !!ghl.receipt_url, upload_error: lastUploadError || undefined });
   return res.status(502).json({ error: ghlOk === false ? "ghl_failed" : "email_failed", detail: lastEmailError });
 }
