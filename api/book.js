@@ -28,14 +28,14 @@ function toE164(phone) {
 let lastUploadError = "";
 // Upload to the GoHighLevel sub-account's Media Storage (POST /medias/upload-file, Version 2021-07-28)
 async function uploadReceiptToGHL({ bytes, contentType, filename }) {
-  const key = process.env.GHL_API_KEY;
+  const key = (process.env.GHL_API_KEY || "").trim();
   if (!key) return null;
   try {
     const form = new FormData();
     form.append("file", new Blob([bytes], { type: contentType }), filename);
     form.append("name", filename);
     form.append("hosted", "false");
-    if (process.env.GHL_RECEIPTS_FOLDER_ID) form.append("parentId", process.env.GHL_RECEIPTS_FOLDER_ID);
+    if (process.env.GHL_RECEIPTS_FOLDER_ID) form.append("parentId", process.env.GHL_RECEIPTS_FOLDER_ID.trim());
     const r = await fetch("https://services.leadconnectorhq.com/medias/upload-file", {
       method: "POST",
       headers: { Authorization: `Bearer ${key}`, Version: "2021-07-28", Accept: "application/json" },
@@ -67,7 +67,7 @@ async function uploadReceipt({ bytes, contentType, filename }) {
 }
 
 async function sendToGHL(payload) {
-  const url = process.env.GHL_WEBHOOK_URL;
+  const url = (process.env.GHL_WEBHOOK_URL || "").trim();
   if (!url) return null;
   try {
     const r = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
@@ -85,7 +85,7 @@ async function sendEmail({ subject, html, text, replyTo, attachments }) {
   if (!RESEND_API_KEY || !CLINIC_EMAIL) return null;
   const FROM_EMAIL = process.env.FROM_EMAIL || "Greenery Therapy Nook <onboarding@resend.dev>";
   try {
-    const payload = { from: FROM_EMAIL, to: CLINIC_EMAIL.split(",").map((s) => s.trim()).filter(Boolean), reply_to: replyTo, subject, html, text };
+    const payload = { from: FROM_EMAIL, to: CLINIC_EMAIL.trim().split(",").map((s) => s.trim()).filter(Boolean), reply_to: replyTo, subject, html, text };
     if (attachments) payload.attachments = attachments;
     const r = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -113,7 +113,7 @@ export default async function handler(req, res) {
     res.setHeader("Allow", "POST");
     return res.status(405).json({ error: "method_not_allowed" });
   }
-  const hasGHL = !!process.env.GHL_WEBHOOK_URL;
+  const hasGHL = !!(process.env.GHL_WEBHOOK_URL || "").trim();
   const hasEmail = !!(process.env.RESEND_API_KEY && process.env.CLINIC_EMAIL);
   if (!hasGHL && !hasEmail) return res.status(503).json({ error: "not_configured" });
 
