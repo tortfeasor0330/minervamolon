@@ -622,12 +622,12 @@ footer.foot{padding-block:48px 24px}
       <div class="mode f2f">
         <div class="top"><svg><use href="#i-clinic"/></svg><h3>Face-to-Face</h3></div>
         <ul><li>In-person visit at our clinic in San Jose, Tacloban City</li><li>Best for first assessments and complex concerns</li><li>Family members welcome when helpful</li></ul>
-        <span class="tag" id="f2fDays">Mon · Wed · Fri · Sat morning</span>
+        <span class="tag" id="f2fDays">Mon–Sat · same hours as online</span>
       </div>
       <div class="mode onl">
         <div class="top"><svg><use href="#i-video"/></svg><h3>Online</h3></div>
         <ul><li>Secure video call from home, anywhere in the world</li><li>Ideal for follow-ups and patients living abroad</li><li>Video link sent by email before your session</li></ul>
-        <span class="tag" id="onlDays">Tue · Thu (incl. evenings) · Sat</span>
+        <span class="tag" id="onlDays">Mon–Sat · Tue &amp; Thu until 7 PM</span>
       </div>
     </div>
   </div>
@@ -670,7 +670,7 @@ footer.foot{padding-block:48px 24px}
   <div class="wrap perks-in">
     <div><svg><use href="#i-shield"/></svg><span><b>Confidential</b>Your privacy is protected</span></div>
     <div><svg><use href="#i-video"/></svg><span><b>Online sessions</b>Join from anywhere</span></div>
-    <div><svg><use href="#i-clock"/></svg><span><b>Evening slots</b>Tue &amp; Thu online</span></div>
+    <div><svg><use href="#i-clock"/></svg><span><b>Late slots</b>Tue &amp; Thu until 7 PM</span></div>
   </div>
 </div>
 </main>
@@ -705,18 +705,19 @@ const CONFIG = {
   phone: "0920 927 8716",
   email: "melbaperegrino@yahoo.com.ph",
   address: "Cogon Rd, Brgy 83-B, San Jose, Tacloban City",
-  hoursText: "Mon–Fri 9:00–17:00 · Sat 9:00–12:00",
+  hoursText: "Mon–Fri 9 AM–12 PM & 2–5 PM (Tue & Thu until 7 PM) · Sat 9 AM–12 PM",
   bookAheadDays: 60,                 // how far ahead patients can book
   minNoticeHours: 12,                // no bookings closer than this
   // Hourly start times per weekday (0 = Sunday). One appointment per hour, either mode.
   hours: {
-    0: { inPerson: [],                         online: [] },
-    1: { inPerson: [9,10,11,14,15,16],         online: [] },
-    2: { inPerson: [],                         online: [9,10,11,14,15,16,18,19] },
-    3: { inPerson: [9,10,11,14,15,16],         online: [] },
-    4: { inPerson: [],                         online: [9,10,11,14,15,16,18,19] },
-    5: { inPerson: [9,10,11,14,15],            online: [] },
-    6: { inPerson: [9,10],                     online: [11] }
+    // Matches Dr. Molon's GoHighLevel availability; both modes share one schedule (GHL prevents double-booking)
+    0: { inPerson: [],                          online: [] },
+    1: { inPerson: [9,10,11,14,15,16],          online: [9,10,11,14,15,16] },
+    2: { inPerson: [9,10,11,14,15,16,17,18],    online: [9,10,11,14,15,16,17,18] },
+    3: { inPerson: [9,10,11,14,15,16],          online: [9,10,11,14,15,16] },
+    4: { inPerson: [9,10,11,14,15,16,17,18],    online: [9,10,11,14,15,16,17,18] },
+    5: { inPerson: [9,10,11,14,15,16],          online: [9,10,11,14,15,16] },
+    6: { inPerson: [9,10,11],                   online: [9,10,11] }
   },
   closedDates: [],                    // e.g. "2026-12-25"
   // When this site is hosted on its own domain, set a webhook URL (e.g. a GoHighLevel or Zapier webhook)
