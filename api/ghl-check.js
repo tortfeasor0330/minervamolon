@@ -1,5 +1,5 @@
 // GET /api/ghl-check: shows whether the GoHighLevel connection is set up, without revealing any secrets.
-import { ghl, ghlKey, locationId, calendarFor, env, CLINIC_TZ } from "./_ghl.js";
+import { ghl, ghlKey, locationId, resolveLocationId, calendarFor, env, CLINIC_TZ } from "./_ghl.js";
 
 export default async function handler(req, res) {
   res.setHeader("Cache-Control", "no-store");
@@ -15,6 +15,8 @@ export default async function handler(req, res) {
   };
   if (!ghlKey() || !calendarFor("inPerson")) return res.status(200).json(out);
 
+  await resolveLocationId();
+  out.settings.GHL_LOCATION_ID = locationId() || "unknown";
   const msg = (r) => (r.json && (r.json.message || r.json.error)) || (r.text || "").slice(0, 200);
   try {
     const cal = await ghl(`/calendars/${encodeURIComponent(calendarFor("inPerson"))}`);

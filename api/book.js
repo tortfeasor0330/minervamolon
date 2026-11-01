@@ -11,7 +11,7 @@
 //                 BLOB_READ_WRITE_TOKEN  – optional fallback host (Vercel Blob) if GHL_API_KEY is not set
 //   Email:        RESEND_API_KEY, CLINIC_EMAIL, optional FROM_EMAIL (see README)
 
-import { ghl as ghlApi, ghlKey, locationId, calendarFor, clinicISO } from "./_ghl.js";
+import { ghl as ghlApi, ghlKey, locationId, resolveLocationId, calendarFor, clinicISO } from "./_ghl.js";
 
 const MAX_RECEIPT_BYTES = 3.5 * 1024 * 1024;
 
@@ -24,6 +24,7 @@ async function bookInGHL({ b, name, email, phone, firstName, lastName }) {
   const date = String(b.date || ""), hour = Number(b.hour);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !(hour >= 0 && hour <= 23)) return { ok: false, code: "bad_time" };
   try {
+    await resolveLocationId();
     const c = await ghlApi("/contacts/upsert", {
       method: "POST", version: "2021-07-28",
       body: { locationId: locationId(), firstName, lastName, name, email, phone: toE164(phone), source: "greenerytherapynook.com", tags: ["website booking"] },

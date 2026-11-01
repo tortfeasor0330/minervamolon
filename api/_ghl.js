@@ -5,7 +5,18 @@ export const CLINIC_OFFSET = "+08:00";
 
 export const env = (k, d = "") => String(process.env[k] || d).trim();
 export const ghlKey = () => env("GHL_API_KEY");
-export const locationId = () => env("GHL_LOCATION_ID", "XpqtEM1gWLlIYWwOvaQ2");
+// Sub-account (location) ID: from GHL_LOCATION_ID, otherwise read from the calendar itself (cached)
+let _loc = "";
+export const locationId = () => env("GHL_LOCATION_ID") || _loc;
+export async function resolveLocationId() {
+  if (env("GHL_LOCATION_ID")) return env("GHL_LOCATION_ID");
+  if (_loc) return _loc;
+  const cal = calendarFor("inPerson");
+  if (!ghlKey() || !cal) return "";
+  const r = await ghl(`/calendars/${encodeURIComponent(cal)}`);
+  _loc = (r.ok && r.json && r.json.calendar && r.json.calendar.locationId) || "";
+  return _loc;
+}
 // One calendar for both modes, or a separate one for online sessions
 export const calendarFor = (mode) =>
   mode === "online" ? env("GHL_CALENDAR_ID_ONLINE") || env("GHL_CALENDAR_ID") : env("GHL_CALENDAR_ID");
